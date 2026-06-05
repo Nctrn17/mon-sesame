@@ -1,0 +1,4 @@
+# Service de calcul national exact (couche OpenFisca de l'architecture hybride).
+# Installe le modèle socio-fiscal français + l'API web.
+openfisca-france
+openfisca-core[web-api]

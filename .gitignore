@@ -1,0 +1,21 @@
+# Dépendances et builds
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# Environnement
+.env
+.env.local
+.env.*.local
+
+# Python (service OpenFisca)
+.venv/
+__pycache__/
+*.pyc
+
+# Divers
+.DS_Store
+*.log
+.vercel

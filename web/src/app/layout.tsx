@@ -1,0 +1,40 @@
+import type { Metadata } from "next";
+import { Geist } from "next/font/google";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import "./globals.css";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Boussole : vos aides de retraité, sans rien laisser passer",
+  description:
+    "Découvrez en quelques minutes les aides, exonérations et tarifs réduits auxquels vous avez droit. Service gratuit, sans inscription obligatoire.",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
+      <body className="bg-background text-foreground flex min-h-full flex-col">
+        <a
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-white"
+        >
+          Aller au contenu principal
+        </a>
+        <SiteHeader />
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
+        <SiteFooter />
+      </body>
+    </html>
+  );
+}
