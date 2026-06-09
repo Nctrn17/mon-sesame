@@ -21,6 +21,18 @@ export function ResultsView({
 }) {
   const report = useMemo(() => buildReport(profile), [profile]);
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Déplie toutes les sections le temps de l'impression : un <details>
+  // fermé ne s'imprime pas, et le bilan papier doit être complet.
+  const printReport = () => {
+    const closed = Array.from(
+      containerRef.current?.querySelectorAll("details:not([open])") ?? [],
+    );
+    for (const d of closed) d.setAttribute("open", "");
+    window.print();
+    for (const d of closed) d.removeAttribute("open");
+  };
 
   useEffect(() => {
     headingRef.current?.focus();
@@ -54,7 +66,7 @@ export function ResultsView({
   const renderCard = (r: AidResult) => <AidCard key={r.aid.id} result={r} profile={profile} />;
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
+    <div ref={containerRef} className="mx-auto w-full max-w-3xl">
       <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-bold text-foreground outline-none">
         Voici vos droits possibles
       </h1>
@@ -62,6 +74,10 @@ export function ResultsView({
       <div className="mt-6">
         <PotentialBanner eligibleCount={eligible.length} toCheckCount={toCheck.length} />
       </div>
+
+      <p className="hidden print:block mt-2 text-muted">
+        Bilan Boussole du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
+      </p>
 
       <p className="mt-4 text-muted">
         Ces résultats sont des <strong>estimations</strong>, pas un accord. C&apos;est chaque
@@ -101,13 +117,15 @@ export function ResultsView({
       ) : null}
 
       {showAnticipation ? (
-        <AnticipationPanel profile={profile} currentActiveIds={currentActiveIds} />
+        <div className="print:hidden">
+          <AnticipationPanel profile={profile} currentActiveIds={currentActiveIds} />
+        </div>
       ) : null}
 
       <LocalAidsSection commune={profile.commune} />
 
       {other.length > 0 ? (
-        <details className="mt-10 rounded-2xl border border-border bg-card p-5">
+        <details className="print:hidden mt-10 rounded-2xl border border-border bg-card p-5">
           <summary className="cursor-pointer text-lg font-medium text-foreground">
             <h2 className="inline text-lg font-medium">
               Aides non retenues pour votre profil ({other.length})
@@ -117,7 +135,7 @@ export function ResultsView({
         </details>
       ) : null}
 
-      <aside className="mt-10 rounded-2xl border-2 border-brand bg-brand-light p-6">
+      <aside className="print:hidden mt-10 rounded-2xl border-2 border-brand bg-brand-light p-6">
         <h2 className="text-xl font-semibold text-brand-dark">Gardez ces résultats près de vous</h2>
         <p className="mt-2 text-foreground">
           Bientôt : créez un compte (facultatif) pour sauvegarder votre bilan et être prévenu(e)
@@ -126,14 +144,14 @@ export function ResultsView({
         </p>
         <button
           type="button"
-          onClick={() => window.print()}
+          onClick={printReport}
           className="mt-4 rounded-lg border-2 border-brand px-5 py-2.5 font-semibold text-brand-dark"
         >
           Imprimer mon bilan
         </button>
       </aside>
 
-      <div className="mt-10">
+      <div className="print:hidden mt-10">
         <button
           type="button"
           onClick={onRestart}
