@@ -10,13 +10,13 @@
 */
 
 :root {
-  --background: #f7f9fb;
-  --foreground: #14233a;
+  --background: #ffffff;
+  --foreground: #161616;
 
-  /* Bleu de confiance (institutionnel mais chaleureux) */
-  --brand: #1b5e9c;
-  --brand-dark: #14497a;
-  --brand-light: #e7f0f9;
+  /* Bleu institutionnel profond (direction "service public") */
+  --brand: #000091;
+  --brand-dark: #00006d;
+  --brand-light: #e3e3fd;
 
   /* Vert "argent retrouvé" pour les montants positifs (contraste AA) */
   --money: #15663b;
@@ -28,8 +28,8 @@
 
   /* Gris secondaire assombri pour atteindre 4.5:1 sur le fond clair */
   --muted: #4a5568;
-  --border: #d3dde8;
-  --card: #ffffff;
+  --border: #dddddd;
+  --card: #f6f6f6;
 }
 
 @theme inline {
