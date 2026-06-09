@@ -23,10 +23,6 @@ export function lowIncomeLikely(taxStatus: TaxStatus | undefined): boolean {
   return taxStatus === "non_imposable";
 }
 
-export function incomeUnknown(taxStatus: TaxStatus | undefined): boolean {
-  return taxStatus === undefined || taxStatus === "inconnu";
-}
-
 /** Proxy GIR : besoin d'aide marqué (souvent / quotidien) suggère GIR 1-4. */
 export function suggestsHeavyDependence(profile: Profile): boolean {
   return profile.autonomy === "souvent" || profile.autonomy === "quotidien";

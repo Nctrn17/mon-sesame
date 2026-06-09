@@ -91,6 +91,29 @@ function evaluateNavigoSenior(ctx: EvalContext): AidVerdict {
   };
 }
 
+
+function evaluateSolidariteTransport(ctx: EvalContext): AidVerdict {
+  const { profile } = ctx;
+
+  if (profile.taxStatus === "imposable") {
+    return {
+      status: "not_eligible",
+      explanation: [
+        "La tarification Solidarité Transport est réservée aux personnes percevant certaines aides sous condition de ressources (Complémentaire santé solidaire, RSA...).",
+      ],
+    };
+  }
+
+  return {
+    status: "to_check",
+    explanation: [
+      "Si vous bénéficiez de la Complémentaire santé solidaire (ou du RSA), vous avez droit à une réduction de 50 % à 75 % sur les tickets et le forfait Navigo, dans toute l'Île-de-France.",
+      "Si vous avez droit au forfait Améthyste ou au Navigo Senior, comparez : selon votre situation, l'un des trois est plus avantageux.",
+    ],
+    missingInfo: ["Bénéficiez-vous de la Complémentaire santé solidaire ou du RSA ?"],
+  };
+}
+
 export const transportIdfDefinitions: AidDefinition[] = [
   {
     aid: {
@@ -144,5 +167,32 @@ export const transportIdfDefinitions: AidDefinition[] = [
       lastVerifiedAt: "2026-06-04",
     },
     evaluate: evaluateNavigoSenior,
+  },
+  {
+    aid: {
+      id: "solidarite-transport-idf",
+      name: "Tarification Solidarité Transport (réduction 50 à 75 %)",
+      shortName: "Solidarité Transport",
+      category: "transport",
+      scope: { level: "region", code: IDF.regionCode },
+      authority: "Île-de-France Mobilités",
+      impact: "moyen",
+      valueStatement: "Tickets et forfait Navigo à moitié prix ou moins, quel que soit votre âge.",
+      description:
+        "Une réduction de 50 % à 75 % sur les transports d'Île-de-France pour les bénéficiaires de la Complémentaire santé solidaire ou du RSA, sans condition d'âge.",
+      whyOftenMissed:
+        "Le droit découle d'une autre aide (CSS, RSA) : personne ne pense à le réclamer au transporteur, et il faut le renouveler chaque année.",
+      source: {
+        label: "iledefrance-mobilites.fr : tarification Solidarité Transport",
+        url: "https://www.iledefrance-mobilites.fr/titres-et-tarifs/aides-et-reductions",
+      },
+      howToApply: {
+        organism: "Agence Solidarité Transport (en ligne ou par téléphone)",
+        url: "https://www.solidaritetransport.fr/",
+        sentenceToSay: "Je bénéficie de la Complémentaire santé solidaire et je voudrais activer la réduction Solidarité Transport sur mon passe Navigo.",
+      },
+      lastVerifiedAt: "2026-06-09",
+    },
+    evaluate: evaluateSolidariteTransport,
   },
 ];

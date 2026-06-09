@@ -33,6 +33,40 @@ function evaluateReversion(ctx: EvalContext): AidVerdict {
   };
 }
 
+function evaluateAllocationVeuvage(ctx: EvalContext): AidVerdict {
+  const { age, profile } = ctx;
+
+  if (!profile.recentlyWidowed) {
+    return {
+      status: "not_eligible",
+      explanation: ["L'allocation veuvage concerne les personnes ayant récemment perdu leur conjoint."],
+    };
+  }
+
+  if (age == null) {
+    return { status: "unknown", explanation: ["Indiquez votre date de naissance."] };
+  }
+
+  if (age >= 55) {
+    return {
+      status: "not_eligible",
+      explanation: [
+        "À partir de 55 ans, c'est la pension de réversion qui prend le relais de l'allocation veuvage (voir ci-dessus).",
+      ],
+    };
+  }
+
+  return {
+    status: "to_check",
+    explanation: [
+      "Avant 55 ans, vous n'avez pas encore droit à la réversion du régime de base : l'allocation veuvage est faite pour cette situation.",
+      "Elle est versée pendant 2 ans au maximum, sous condition de ressources, si votre conjoint avait cotisé à la retraite.",
+      "Elle doit être demandée dans les 2 ans suivant le décès : passé ce délai, le droit est perdu.",
+    ],
+    missingInfo: ["Vos ressources des 3 derniers mois, et la carrière de votre conjoint décédé."],
+  };
+}
+
 function evaluateFraisObseques(ctx: EvalContext): AidVerdict {
   const { profile } = ctx;
   if (profile.recentlyWidowed) {
@@ -74,6 +108,33 @@ export const veuvageDefinitions: AidDefinition[] = [
       lastVerifiedAt: "2026-06-04",
     },
     evaluate: evaluateReversion,
+  },
+  {
+    aid: {
+      id: "allocation-veuvage",
+      name: "Allocation veuvage (avant 55 ans)",
+      shortName: "Allocation veuvage",
+      category: "veuvage",
+      scope: { level: "national" },
+      authority: "La caisse de retraite de votre conjoint décédé (CARSAT / CNAV ou MSA)",
+      impact: "eleve",
+      valueStatement: "Un revenu mensuel temporaire après le décès de votre conjoint, avant l'âge de la réversion.",
+      description:
+        "Une allocation versée jusqu'à 2 ans au conjoint survivant de moins de 55 ans, sous condition de ressources, quand le défunt avait cotisé à la retraite.",
+      whyOftenMissed:
+        "Avant 55 ans, on n'a pas droit à la réversion du régime de base : beaucoup pensent n'avoir droit à rien. La demande doit être faite dans les 2 ans.",
+      source: {
+        label: "service-public.fr : allocation veuvage",
+        url: "https://www.service-public.fr/particuliers/vosdroits/F2059",
+      },
+      howToApply: {
+        organism: "La CARSAT (ou la MSA) dont dépendait votre conjoint",
+        url: "https://www.service-public.fr/particuliers/vosdroits/F2059",
+        sentenceToSay: "Je souhaite demander l'allocation veuvage à la suite du décès de mon conjoint.",
+      },
+      lastVerifiedAt: "2026-06-09",
+    },
+    evaluate: evaluateAllocationVeuvage,
   },
   {
     aid: {
