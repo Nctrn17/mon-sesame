@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ResultsView } from "@/components/results/ResultsView";
-import { QUESTIONS, type Question } from "@/domain/profile/questions";
+import { QUESTIONS, type Question, resolveText } from "@/domain/profile/questions";
 import { EMPTY_PROFILE, type Profile, updateProfile } from "@/domain/profile/types";
 import { ChoiceField } from "./ChoiceField";
 import { CommuneAutocomplete } from "./CommuneAutocomplete";
@@ -56,6 +56,8 @@ export function Wizard() {
   const total = QUESTIONS.length;
   const answered = isAnswered(question, profile);
   const titleId = `question-title-${question.id}`;
+  const title = resolveText(question.title, profile);
+  const help = question.help ? resolveText(question.help, profile) : undefined;
 
   function goNext() {
     if (step < total - 1) setStep(step + 1);
@@ -94,9 +96,9 @@ export function Wizard() {
       >
         {question.kind === "choice" ? (
           <ChoiceField
-            legend={question.title}
+            legend={title}
             legendId={titleId}
-            help={question.help}
+            help={help}
             name={question.id}
             options={question.options}
             value={question.get(profile)}
@@ -107,9 +109,9 @@ export function Wizard() {
         {question.kind === "date" ? (
           <div>
             <h2 id={titleId} className="text-2xl font-semibold text-foreground">
-              {question.title}
+              {title}
             </h2>
-            {question.help ? <p className="mt-2 text-[1.05rem] text-muted">{question.help}</p> : null}
+            {help ? <p className="mt-2 text-[1.05rem] text-muted">{help}</p> : null}
             <input
               type="date"
               max={today}
@@ -125,9 +127,9 @@ export function Wizard() {
         {question.kind === "commune" ? (
           <div>
             <h2 id={titleId} className="text-2xl font-semibold text-foreground">
-              {question.title}
+              {title}
             </h2>
-            {question.help ? <p className="mt-2 text-[1.05rem] text-muted">{question.help}</p> : null}
+            {help ? <p className="mt-2 text-[1.05rem] text-muted">{help}</p> : null}
             <CommuneAutocomplete
               selected={profile.commune}
               onSelect={(commune) => setProfile(updateProfile(profile, { commune }))}

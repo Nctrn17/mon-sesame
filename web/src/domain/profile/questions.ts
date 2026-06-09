@@ -12,10 +12,26 @@ export interface ChoiceOption {
   readonly hint?: string;
 }
 
+/** Un libellé qui peut s'adapter selon qu'on remplit pour soi ou pour un proche. */
+export type QuestionText = string | ((p: Profile) => string);
+
+export function resolveText(text: QuestionText, profile: Profile): string {
+  return typeof text === "function" ? text(profile) : text;
+}
+
+/**
+ * Choisit la formulation selon le destinataire. Quand on aide un proche, les
+ * questions doivent parler DE LUI, pas de l'aidant qui remplit le formulaire.
+ */
+const forWhom =
+  (self: string, relative: string): QuestionText =>
+  (p) =>
+    p.fillingFor === "relative" ? relative : self;
+
 interface BaseQuestion {
   readonly id: string;
-  readonly title: string;
-  readonly help?: string;
+  readonly title: QuestionText;
+  readonly help?: QuestionText;
 }
 
 export interface ChoiceQuestion extends BaseQuestion {
@@ -64,7 +80,10 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "birthDate",
     kind: "date",
-    title: "Quelle est votre date de naissance ?",
+    title: forWhom(
+      "Quelle est votre date de naissance ?",
+      "Quelle est la date de naissance de votre proche ?",
+    ),
     help: "Elle sert à repérer les droits qui s'ouvrent à 60, 62, 65 ou 75 ans.",
     get: (p) => p.birthDate,
     set: (p, v) => updateProfile(p, { birthDate: v }),
@@ -72,12 +91,15 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "retirement",
     kind: "choice",
-    title: "Où en êtes-vous de la retraite ?",
+    title: forWhom(
+      "Où en êtes-vous de la retraite ?",
+      "Où en est votre proche par rapport à la retraite ?",
+    ),
     help: "Beaucoup de droits s'ouvrent au moment du départ à la retraite, quand les revenus baissent.",
     options: [
-      { value: "retraite", label: "Je suis déjà à la retraite" },
-      { value: "bientot", label: "J'y serai bientôt" },
-      { value: "actif", label: "Je travaille encore" },
+      { value: "retraite", label: "Déjà à la retraite" },
+      { value: "bientot", label: "Bientôt à la retraite" },
+      { value: "actif", label: "Encore en activité" },
     ],
     get: (p) => p.retirement,
     set: (p, v) => updateProfile(p, { retirement: v as Profile["retirement"] }),
@@ -85,13 +107,22 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "commune",
     kind: "commune",
-    title: "Dans quelle commune habitez-vous ?",
-    help: "Beaucoup d'aides dépendent de votre commune ou de votre département.",
+    title: forWhom(
+      "Dans quelle commune habitez-vous ?",
+      "Dans quelle commune habite votre proche ?",
+    ),
+    help: forWhom(
+      "Beaucoup d'aides dépendent de votre commune ou de votre département.",
+      "Beaucoup d'aides dépendent de sa commune ou de son département.",
+    ),
   },
   {
     id: "maritalSituation",
     kind: "choice",
-    title: "Vivez-vous seul(e) ou en couple ?",
+    title: forWhom(
+      "Vivez-vous seul(e) ou en couple ?",
+      "Votre proche vit-il seul(e) ou en couple ?",
+    ),
     options: [
       { value: "seul", label: "Seul(e)" },
       { value: "couple", label: "En couple" },
@@ -102,8 +133,11 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "recentlyWidowed",
     kind: "choice",
-    title: "Avez-vous perdu votre conjoint au cours des dernières années ?",
-    help: "Le veuvage ouvre des droits (pension de réversion) souvent oubliés.",
+    title: forWhom(
+      "Avez-vous perdu votre conjoint au cours des dernières années ?",
+      "Votre proche a-t-il perdu son conjoint au cours des dernières années ?",
+    ),
+    help: "Le veuvage ouvre des droits (la pension de réversion) souvent oubliés.",
     options: OUI_NON,
     get: boolGet((p) => p.recentlyWidowed),
     set: (p, v) => updateProfile(p, { recentlyWidowed: v === "oui" }),
@@ -111,11 +145,17 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "taxStatus",
     kind: "choice",
-    title: "Aujourd'hui, êtes-vous imposable sur le revenu ?",
-    help: "Votre dernier avis d'imposition l'indique. Nous ne demandons aucun montant.",
+    title: forWhom(
+      "Aujourd'hui, êtes-vous imposable sur le revenu ?",
+      "Aujourd'hui, votre proche est-il imposable sur le revenu ?",
+    ),
+    help: forWhom(
+      "Votre dernier avis d'imposition l'indique. Nous ne demandons aucun montant.",
+      "Son dernier avis d'imposition l'indique. Nous ne demandons aucun montant.",
+    ),
     options: [
-      { value: "imposable", label: "Oui, je paie l'impôt sur le revenu" },
-      { value: "non_imposable", label: "Non, je ne suis pas imposable" },
+      { value: "imposable", label: "Oui, imposable sur le revenu" },
+      { value: "non_imposable", label: "Non, pas imposable" },
       { value: "inconnu", label: "Je ne sais pas" },
     ],
     get: (p) => p.taxStatus,
@@ -124,12 +164,12 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "housing",
     kind: "choice",
-    title: "Votre logement, c'est...",
+    title: forWhom("Votre logement, c'est...", "Le logement de votre proche, c'est..."),
     options: [
-      { value: "proprietaire", label: "Je suis propriétaire" },
-      { value: "locataire", label: "Je suis locataire" },
-      { value: "heberge", label: "Je suis hébergé(e) chez un proche" },
-      { value: "etablissement", label: "Je vis en établissement (EHPAD, résidence)" },
+      { value: "proprietaire", label: "Propriétaire" },
+      { value: "locataire", label: "Locataire" },
+      { value: "heberge", label: "Hébergé(e) par de la famille ou des amis" },
+      { value: "etablissement", label: "En établissement (maison de retraite, EHPAD)" },
     ],
     get: (p) => p.housing,
     set: (p, v) => updateProfile(p, { housing: v as Profile["housing"] }),
@@ -137,10 +177,13 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "autonomy",
     kind: "choice",
-    title: "Au quotidien, avez-vous besoin d'aide ?",
+    title: forWhom(
+      "Au quotidien, avez-vous besoin d'aide ?",
+      "Au quotidien, votre proche a-t-il besoin d'aide ?",
+    ),
     help: "Pour se laver, s'habiller, se déplacer ou préparer les repas. Répondez au plus juste.",
     options: [
-      { value: "jamais", label: "Jamais, je suis autonome" },
+      { value: "jamais", label: "Jamais (autonome)" },
       { value: "parfois", label: "Parfois, pour certaines tâches" },
       { value: "souvent", label: "Souvent" },
       { value: "quotidien", label: "Tous les jours" },
@@ -151,8 +194,11 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "disability",
     kind: "choice",
-    title: "Avez-vous une reconnaissance de handicap ou d'invalidité ?",
-    help: "Par exemple l'AAH, une carte mobilité inclusion ou une pension d'invalidité.",
+    title: forWhom(
+      "Avez-vous une reconnaissance de handicap ou d'invalidité ?",
+      "Votre proche a-t-il une reconnaissance de handicap ou d'invalidité ?",
+    ),
+    help: "Par exemple l'allocation aux adultes handicapés (AAH), une carte mobilité inclusion ou une pension d'invalidité.",
     options: OUI_NON,
     get: boolGet((p) => p.disability),
     set: (p, v) => updateProfile(p, { disability: v === "oui" }),
@@ -160,7 +206,10 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "usesHomeHelp",
     kind: "choice",
-    title: "Payez-vous une aide à domicile, une téléassistance ou un service à la personne ?",
+    title: forWhom(
+      "Payez-vous une aide à domicile, une téléassistance ou un service à la personne ?",
+      "Votre proche paie-t-il une aide à domicile, une téléassistance ou un service à la personne ?",
+    ),
     help: "Ménage, aide à la personne, jardinage, téléassistance... Même occasionnel. Cela ouvre droit à un crédit d'impôt.",
     options: OUI_NON,
     get: boolGet((p) => p.usesHomeHelp),
@@ -169,8 +218,14 @@ export const QUESTIONS: readonly Question[] = [
   {
     id: "scheme",
     kind: "choice",
-    title: "Votre retraite vient de quel régime ?",
-    help: "Si votre carrière a mêlé plusieurs régimes (privé, public...), choisissez « Carrière mixte ». Cela sert juste à vous orienter vers la bonne caisse.",
+    title: forWhom(
+      "Votre retraite vient de quel régime ?",
+      "La retraite de votre proche vient de quel régime ?",
+    ),
+    help: forWhom(
+      "Si votre carrière a mêlé plusieurs régimes (privé, public...), choisissez « Carrière mixte ». Cela sert juste à vous orienter vers la bonne caisse.",
+      "Si sa carrière a mêlé plusieurs régimes (privé, public...), choisissez « Carrière mixte ». Cela sert juste à l'orienter vers la bonne caisse.",
+    ),
     options: [
       { value: "general", label: "Le privé (régime général, salarié)" },
       { value: "fonction_publique", label: "La fonction publique" },
