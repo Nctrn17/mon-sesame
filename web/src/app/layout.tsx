@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { SITE_URL } from "./site";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -10,9 +11,19 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Boussole : vos aides de retraité, sans rien laisser passer",
   description:
     "Découvrez en quelques minutes les aides, exonérations et tarifs réduits auxquels vous avez droit. Service gratuit, sans inscription obligatoire.",
+  openGraph: {
+    title: "Boussole : vos aides de retraité, sans rien laisser passer",
+    description:
+      "Répondez à une douzaine de questions simples et découvrez les aides auxquelles vous avez droit. Gratuit, anonyme, sans inscription.",
+    url: SITE_URL,
+    siteName: "Boussole",
+    locale: "fr_FR",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
