@@ -3,12 +3,22 @@ import type { AidVerdict, EvalContext } from "@/domain/eligibility/types";
 
 function evaluateAidant(ctx: EvalContext): AidVerdict {
   const { profile } = ctx;
-  if (profile.fillingFor === "relative") {
+  // Remplir pour un proche, c'est déjà être aidant ; sinon, la réponse
+  // à la question « aidez-vous un proche ? » fait foi.
+  if (profile.fillingFor === "relative" || profile.isCaregiver === true) {
     return {
       status: "eligible",
       explanation: [
         "Vous aidez un proche : vous aussi avez des droits.",
         "Le congé de proche aidant peut être indemnisé (AJPA), et des solutions de répit existent pour souffler.",
+      ],
+    };
+  }
+  if (profile.isCaregiver === false) {
+    return {
+      status: "not_eligible",
+      explanation: [
+        "Ces droits s'adressent aux personnes qui aident régulièrement un proche en perte d'autonomie.",
       ],
     };
   }

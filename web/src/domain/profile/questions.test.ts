@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { QUESTIONS, resolveText } from "./questions";
+import { QUESTIONS, resolveText, visibleQuestions } from "./questions";
 import type { Profile } from "./types";
 
 const question = (id: string) => {
@@ -44,5 +44,29 @@ describe("questionnaire adapté au destinataire (fillingFor)", () => {
     for (const option of housing.options) {
       expect(option.label.toLowerCase()).not.toMatch(/\bje\b|\bvous\b/);
     }
+  });
+});
+
+describe("question « aidant » conditionnelle (visibleQuestions)", () => {
+  const ids = (p: Profile) => visibleQuestions(p).map((q) => q.id);
+
+  it("pose la question quand on remplit pour soi", () => {
+    expect(ids({ fillingFor: "self" })).toContain("isCaregiver");
+  });
+
+  it("ne la pose pas quand on remplit pour un proche (on est déjà aidant)", () => {
+    expect(ids({ fillingFor: "relative" })).not.toContain("isCaregiver");
+  });
+
+  it("la pose tant que le destinataire est inconnu", () => {
+    expect(ids({})).toContain("isCaregiver");
+  });
+
+  it("enregistre la réponse dans le profil (oui/non)", () => {
+    const q = question("isCaregiver");
+    if (q.kind !== "choice") throw new Error("isCaregiver devrait être un choix");
+    expect(q.set({}, "oui").isCaregiver).toBe(true);
+    expect(q.set({}, "non").isCaregiver).toBe(false);
+    expect(q.get({ isCaregiver: true })).toBe("oui");
   });
 });

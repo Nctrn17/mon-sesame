@@ -192,6 +192,45 @@ function evaluateTeleassistance(ctx: EvalContext): AidVerdict {
   };
 }
 
+function evaluatePortageRepas(ctx: EvalContext): AidVerdict {
+  const { age, profile } = ctx;
+  if (age == null) {
+    return { status: "unknown", explanation: ["Indiquez votre date de naissance."] };
+  }
+  if (profile.housing === "etablissement") {
+    return {
+      status: "not_eligible",
+      explanation: ["En établissement, les repas sont déjà fournis : le portage concerne le domicile."],
+    };
+  }
+  if (age < 65) {
+    return {
+      status: "not_eligible",
+      explanation: [
+        "Le portage de repas au titre de l'aide sociale est accessible à partir de 65 ans (60 ans en cas d'inaptitude au travail).",
+      ],
+    };
+  }
+  const explanation = [
+    "Des repas préparés sont livrés chez vous, régulièrement, par la commune ou un service conventionné.",
+    "Le service est ouvert sans condition de ressources stricte ; selon vos revenus, le coût peut être pris en charge par l'aide sociale du département ou intégré à un plan APA.",
+  ];
+  if (suggestsHeavyDependence(profile)) {
+    return {
+      status: "to_check",
+      explanation: [
+        ...explanation,
+        "Avec une perte d'autonomie marquée, demandez son financement dans le cadre de l'APA.",
+      ],
+    };
+  }
+  return {
+    status: "to_check",
+    explanation,
+    missingInfo: ["Les tarifs et la prise en charge varient selon votre commune et vos ressources."],
+  };
+}
+
 function evaluateArdh(ctx: EvalContext): AidVerdict {
   const { age, profile } = ctx;
   if (age == null) {
@@ -335,6 +374,34 @@ export const autonomieDefinitions: AidDefinition[] = [
       lastVerifiedAt: "2026-06-04",
     },
     evaluate: evaluateTeleassistance,
+  },
+  {
+    aid: {
+      id: "portage-repas",
+      name: "Portage de repas à domicile",
+      shortName: "Portage de repas",
+      category: "autonomie",
+      scope: { level: "national" },
+      authority: "CCAS de la commune ou conseil départemental",
+      impact: "coup_de_pouce",
+      valueStatement: "Des repas livrés chez vous quand cuisiner devient difficile, avec un coût réduit selon vos ressources.",
+      description:
+        "Un service de livraison régulière de repas à domicile, proposé par la commune ou un service conventionné. Dès 65 ans (60 ans en cas d'inaptitude), l'aide sociale du département ou l'APA peuvent en réduire le coût.",
+      whyOftenMissed:
+        "Le service existe dans la plupart des communes mais n'est presque jamais présenté comme un droit ; beaucoup ignorent que l'aide sociale ou l'APA peuvent le financer.",
+      source: {
+        label: "service-public.fr : aide sociale pour les repas (foyer-restaurant, portage)",
+        url: "https://www.service-public.fr/particuliers/vosdroits/F245",
+      },
+      howToApply: {
+        organism: "Le CCAS de votre commune, ou le service autonomie du conseil départemental",
+        url: "https://www.service-public.fr/particuliers/vosdroits/F245",
+        sentenceToSay:
+          "Je voudrais bénéficier du portage de repas à domicile et connaître la prise en charge possible au titre de l'aide sociale.",
+      },
+      lastVerifiedAt: "2026-07-01",
+    },
+    evaluate: evaluatePortageRepas,
   },
   {
     aid: {

@@ -117,6 +117,58 @@ describe("solidarité transport IDF", () => {
   });
 });
 
+describe("droits du proche aidant", () => {
+  const base: Profile = { birthDate: "1958-01-01", commune: LYON };
+
+  it("éligible quand on remplit pour un proche (aidant par définition)", () => {
+    const profile: Profile = { ...base, fillingFor: "relative" };
+    expect(find(buildReport(profile, REF).results, "aidant")?.status).toBe("eligible");
+  });
+
+  it("éligible quand on remplit pour soi et qu'on aide un proche", () => {
+    const profile: Profile = { ...base, fillingFor: "self", isCaregiver: true };
+    expect(find(buildReport(profile, REF).results, "aidant")?.status).toBe("eligible");
+  });
+
+  it("non concerné quand on répond ne pas aider de proche", () => {
+    const profile: Profile = { ...base, fillingFor: "self", isCaregiver: false };
+    expect(find(buildReport(profile, REF).results, "aidant")?.status).toBe("not_eligible");
+  });
+
+  it("reste « à vérifier » tant que la question est sans réponse", () => {
+    const profile: Profile = { ...base, fillingFor: "self" };
+    expect(find(buildReport(profile, REF).results, "aidant")?.status).toBe("to_check");
+  });
+});
+
+describe("portage de repas à domicile", () => {
+  it("à vérifier pour une personne de 65 ans ou plus vivant à domicile", () => {
+    const profile: Profile = { birthDate: "1955-01-01", commune: LYON, housing: "locataire" };
+    expect(find(buildReport(profile, REF).results, "portage-repas")?.status).toBe("to_check");
+  });
+
+  it("non éligible avant 65 ans", () => {
+    const profile: Profile = { birthDate: "1963-01-01", commune: LYON, housing: "locataire" };
+    expect(find(buildReport(profile, REF).results, "portage-repas")?.status).toBe("not_eligible");
+  });
+
+  it("non éligible en établissement (les repas sont fournis)", () => {
+    const profile: Profile = { birthDate: "1950-01-01", commune: LYON, housing: "etablissement" };
+    expect(find(buildReport(profile, REF).results, "portage-repas")?.status).toBe("not_eligible");
+  });
+
+  it("inconnu sans date de naissance", () => {
+    const profile: Profile = { commune: LYON, housing: "locataire" };
+    expect(find(buildReport(profile, REF).results, "portage-repas")?.status).toBe("unknown");
+  });
+
+  it("honnêteté : jamais de montant estimé (prise en charge trop variable)", () => {
+    const profile: Profile = { birthDate: "1950-01-01", commune: LYON, housing: "locataire" };
+    const portage = find(buildReport(profile, REF).results, "portage-repas");
+    expect(portage?.estimatedAnnualAmount).toBeUndefined();
+  });
+});
+
 describe("statut fiscal inconnu (« je ne sais pas »)", () => {
   it("l'ASPA reste « à vérifier », jamais non éligible", () => {
     const profile: Profile = {

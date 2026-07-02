@@ -32,6 +32,8 @@ interface BaseQuestion {
   readonly id: string;
   readonly title: QuestionText;
   readonly help?: QuestionText;
+  /** Condition d'affichage : la question n'est posée que si elle renvoie vrai. */
+  readonly when?: (p: Profile) => boolean;
 }
 
 export interface ChoiceQuestion extends BaseQuestion {
@@ -52,6 +54,11 @@ export interface CommuneQuestion extends BaseQuestion {
 }
 
 export type Question = ChoiceQuestion | DateQuestion | CommuneQuestion;
+
+/** Questions à poser pour ce profil (les questions conditionnelles sont filtrées). */
+export function visibleQuestions(profile: Profile): readonly Question[] {
+  return QUESTIONS.filter((q) => q.when === undefined || q.when(profile));
+}
 
 const boolGet =
   (read: (p: Profile) => boolean | undefined) =>
@@ -214,6 +221,18 @@ export const QUESTIONS: readonly Question[] = [
     options: OUI_NON,
     get: boolGet((p) => p.usesHomeHelp),
     set: (p, v) => updateProfile(p, { usesHomeHelp: v === "oui" }),
+  },
+  {
+    id: "isCaregiver",
+    kind: "choice",
+    title: "Aidez-vous régulièrement un proche en perte d'autonomie ?",
+    help: "Un parent, un conjoint, un voisin... Aider un proche au quotidien vous ouvre des droits à vous aussi : un congé indemnisé et des solutions de répit.",
+    // Si on remplit pour un proche, la personne qui répond est déjà aidante :
+    // inutile de poser la question.
+    when: (p) => p.fillingFor !== "relative",
+    options: OUI_NON,
+    get: boolGet((p) => p.isCaregiver),
+    set: (p, v) => updateProfile(p, { isCaregiver: v === "oui" }),
   },
   {
     id: "scheme",

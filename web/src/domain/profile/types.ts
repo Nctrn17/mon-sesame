@@ -47,6 +47,8 @@ export interface Profile {
   readonly autonomy?: AutonomyNeed;
   /** Titulaire AAH ou carte mobilité inclusion (invalidité). */
   readonly disability?: boolean;
+  /** Aide régulièrement un proche en perte d'autonomie (demandé quand on remplit pour soi). */
+  readonly isCaregiver?: boolean;
   /** Emploie déjà une aide à domicile / téléassistance / service à la personne. */
   readonly usesHomeHelp?: boolean;
   readonly scheme?: RetirementScheme;
