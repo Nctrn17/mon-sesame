@@ -58,6 +58,18 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Titres équilibrés (pas de mot orphelin), chasse resserrée pour la présence. */
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+  letter-spacing: -0.01em;
+}
+
+p {
+  text-wrap: pretty;
+}
+
 /* Focus visible renforcé pour la navigation clavier.
    L'offset de 3px place le contour en dehors de l'élément, donc visible
    même sur les boutons à fond bleu (le contour se dessine sur le fond clair). */
