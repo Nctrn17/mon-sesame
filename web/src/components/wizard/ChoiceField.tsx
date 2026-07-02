@@ -26,7 +26,7 @@ export function ChoiceField({ legend, legendId, help, name, options, value, onCh
           return (
             <label
               key={opt.value}
-              className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition ${
+              className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 transition focus-within:ring-2 focus-within:ring-brand focus-within:ring-offset-2 ${
                 checked
                   ? "border-brand bg-brand-light"
                   : "border-border bg-card hover:border-brand"

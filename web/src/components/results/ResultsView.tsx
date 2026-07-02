@@ -97,16 +97,25 @@ export function ResultsView({
               <details
                 key={g.theme.key}
                 open={g.eligibleCount > 0}
-                className="rounded-2xl border-2 border-border bg-card"
+                className="group rounded-2xl border-2 border-border bg-card"
               >
-                <summary className="cursor-pointer p-5 text-xl font-semibold text-foreground">
-                  <span aria-hidden className="mr-2">
-                    {g.theme.icon}
-                  </span>
-                  {g.theme.label}
-                  <span className="ml-2 text-base font-normal text-muted">
-                    ({g.eligibleCount > 0 ? `${g.eligibleCount} à votre portée, ` : ""}
-                    {g.items.length} au total)
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
+                  <h3 className="text-xl font-semibold text-foreground">
+                    <span aria-hidden className="mr-2">
+                      {g.theme.icon}
+                    </span>
+                    {g.theme.label}
+                    <span className="ml-2 text-base font-normal text-muted">
+                      ({g.eligibleCount > 0 ? `${g.eligibleCount} à votre portée, ` : ""}
+                      {g.items.length} au total)
+                    </span>
+                  </h3>
+                  <span
+                    aria-hidden
+                    className="shrink-0 text-base font-medium text-brand-dark underline print:hidden"
+                  >
+                    <span className="group-open:hidden">Afficher ▾</span>
+                    <span className="hidden group-open:inline">Masquer ▴</span>
                   </span>
                 </summary>
                 <div className="space-y-4 px-5 pb-5">{g.items.map(renderCard)}</div>
@@ -125,11 +134,13 @@ export function ResultsView({
       <LocalAidsSection commune={profile.commune} />
 
       {other.length > 0 ? (
-        <details className="print:hidden mt-10 rounded-2xl border border-border bg-card p-5">
-          <summary className="cursor-pointer text-lg font-medium text-foreground">
-            <h2 className="inline text-lg font-medium">
-              Aides non retenues pour votre profil ({other.length})
-            </h2>
+        <details className="group print:hidden mt-10 rounded-2xl border border-border bg-card p-5">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium text-foreground [&::-webkit-details-marker]:hidden">
+            <span>Aides non retenues pour votre profil ({other.length})</span>
+            <span aria-hidden className="shrink-0 text-base font-medium text-brand-dark underline">
+              <span className="group-open:hidden">Afficher ▾</span>
+              <span className="hidden group-open:inline">Masquer ▴</span>
+            </span>
           </summary>
           <div className="mt-4 space-y-4">{other.map(renderCard)}</div>
         </details>
@@ -145,7 +156,7 @@ export function ResultsView({
         <button
           type="button"
           onClick={printReport}
-          className="mt-4 rounded-lg border-2 border-brand px-5 py-2.5 font-semibold text-brand-dark"
+          className="mt-4 rounded-lg border-2 border-brand px-5 py-2.5 font-semibold text-brand-dark transition hover:bg-brand hover:text-white active:translate-y-px"
         >
           Imprimer mon bilan
         </button>
@@ -155,7 +166,7 @@ export function ResultsView({
         <button
           type="button"
           onClick={onRestart}
-          className="rounded-xl border-2 border-border px-6 py-3 text-lg font-medium text-foreground"
+          className="rounded-lg border-2 border-border px-6 py-3 text-lg font-medium text-foreground transition hover:border-brand active:translate-y-px"
         >
           Recommencer le questionnaire
         </button>

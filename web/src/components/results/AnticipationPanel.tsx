@@ -65,7 +65,7 @@ export function AnticipationPanel({
           <button
             type="button"
             onClick={applyPension}
-            className="rounded-lg bg-brand px-5 py-3 font-semibold text-white hover:bg-brand-dark"
+            className="rounded-lg bg-brand px-5 py-3 font-semibold text-white transition hover:bg-brand-dark active:translate-y-px"
           >
             Mettre à jour
           </button>
@@ -83,13 +83,13 @@ export function AnticipationPanel({
                 <li key={r.aid.id} className="rounded-xl border border-border bg-card p-4">
                   <p className="font-semibold text-foreground">{r.aid.name}</p>
                   <p className="mt-1 text-foreground">{r.aid.valueStatement}</p>
-                  <p className="mt-1 text-sm text-muted">
+                  <p className="mt-1 text-base text-muted">
                     À demander le moment venu, auprès de : {r.aid.howToApply.organism}
                   </p>
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-sm text-muted">
+            <p className="mt-3 text-base text-muted">
               Projection indicative, à confirmer une fois vos revenus de retraité connus.
             </p>
           </>

@@ -15,7 +15,7 @@ function ContactCard({
 }) {
   return (
     <div className="rounded-xl bg-card p-4">
-      <p className="text-sm font-medium text-brand-dark">{titre}</p>
+      <p className="text-base font-medium text-brand-dark">{titre}</p>
       <p className="font-semibold text-foreground">{guichet.nom ?? titre}</p>
       <p className="mt-1 text-muted">{pourQuoi}</p>
       {guichet.adresse ? <p className="mt-1 text-foreground">{guichet.adresse}</p> : null}
@@ -36,9 +36,10 @@ function ContactCard({
             href={guichet.siteInternet}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`Site internet de ${guichet.nom ?? titre} (nouvelle fenêtre)`}
             className="text-brand-dark underline"
           >
-            Site internet
+            Site internet (nouvelle fenêtre)
           </a>
         </p>
       ) : null}
@@ -77,14 +78,14 @@ export function LocalGuichetPanel({ commune }: { commune?: Commune }) {
             {ccas ? (
               <ContactCard
                 titre="Votre CCAS (mairie)"
-                pourQuoi="Aide sociale communale, forfait Améthyste, secours, téléassistance."
+                pourQuoi="Aide sociale de la commune, forfait Améthyste (transports gratuits ou réduits en Île-de-France), secours, téléassistance."
                 guichet={ccas}
               />
             ) : null}
             {departement ? (
               <ContactCard
                 titre="Votre conseil départemental"
-                pourQuoi="APA, aide à domicile, aide à l'hébergement (ASH), carte mobilité inclusion."
+                pourQuoi="APA (allocation pour l'autonomie), aide à domicile, ASH (aide sociale à l'hébergement), carte mobilité inclusion."
                 guichet={departement}
               />
             ) : null}

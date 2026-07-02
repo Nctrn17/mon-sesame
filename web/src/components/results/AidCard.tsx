@@ -112,7 +112,7 @@ export function AidCard({ result, profile }: { result: AidResult; profile: Profi
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Faire la demande pour ${aid.name} (nouvelle fenêtre)`}
-              className="mt-3 inline-block rounded-lg bg-brand px-5 py-2.5 font-semibold text-white hover:bg-brand-dark"
+              className="mt-3 inline-block rounded-lg bg-brand px-5 py-2.5 font-semibold text-white transition hover:bg-brand-dark active:translate-y-px"
             >
               Faire la demande
             </a>
@@ -121,14 +121,14 @@ export function AidCard({ result, profile }: { result: AidResult; profile: Profi
       ) : null}
 
       {aid.whyOftenMissed ? (
-        <p className="mt-4 text-sm text-muted">
+        <p className="mt-4 text-base text-muted">
           <strong>Pourquoi c&apos;est souvent raté :</strong> {aid.whyOftenMissed}
         </p>
       ) : null}
 
       {aid.id === "aspa" && showHowTo ? <AspaPrecision profile={profile} /> : null}
 
-      <p className="mt-4 text-xs text-muted">
+      <p className="mt-4 text-base text-muted">
         Source :{" "}
         <a
           href={aid.source.url}

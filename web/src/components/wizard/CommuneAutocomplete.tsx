@@ -120,6 +120,10 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
         value={query}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={onKeyDown}
+        onBlur={() => {
+          // Délai pour laisser le clic sur une option aboutir avant de fermer.
+          setTimeout(() => setOpen(false), 150);
+        }}
         className="w-full rounded-xl border-2 border-border bg-card p-4 text-lg focus-visible:border-brand"
       />
 

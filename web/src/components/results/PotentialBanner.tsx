@@ -22,13 +22,13 @@ export function PotentialBanner({ eligibleCount, toCheckCount }: Props) {
     <div className="rounded-2xl border-2 border-money bg-money-light p-6 sm:p-8">
       <p className="text-lg font-medium text-money">Bonne nouvelle</p>
       {eligibleCount > 0 ? (
-        <p className="mt-1 text-3xl font-bold text-money sm:text-4xl">
+        <h2 className="mt-1 text-3xl font-bold text-money sm:text-4xl">
           Vous avez droit à {eligibleCount} aide{eligibleCount > 1 ? "s" : ""}
-        </p>
+        </h2>
       ) : (
-        <p className="mt-1 text-2xl font-bold text-foreground">
+        <h2 className="mt-1 text-2xl font-bold text-foreground">
           {toCheckCount} aide{toCheckCount > 1 ? "s" : ""} à confirmer avec vous
-        </p>
+        </h2>
       )}
       <p className="mt-3 text-lg text-foreground">
         Certaines, comme l&apos;ASPA ou la complémentaire santé, peuvent représenter plusieurs

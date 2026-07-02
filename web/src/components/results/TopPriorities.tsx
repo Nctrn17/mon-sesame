@@ -21,7 +21,7 @@ export function TopPriorities({ items }: { items: readonly AidResult[] }) {
               <div>
                 <p className="font-semibold text-foreground">{r.aid.name}</p>
                 <p className="text-foreground">{r.aid.valueStatement}</p>
-                <p className="mt-1 text-sm text-muted">À demander à : {r.aid.howToApply.organism}</p>
+                <p className="mt-1 text-base text-muted">À demander à : {r.aid.howToApply.organism}</p>
               </div>
             </div>
           </li>

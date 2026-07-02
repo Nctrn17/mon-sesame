@@ -48,9 +48,10 @@ export function LocalAidsSection({ commune }: { commune?: Commune }) {
                 href={s.lien}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={`En savoir plus sur ${s.nom} (nouvelle fenêtre)`}
                 className="mt-2 inline-block text-brand-dark underline"
               >
-                En savoir plus
+                En savoir plus (nouvelle fenêtre)
               </a>
             ) : null}
           </article>
