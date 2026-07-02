@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /*
-  Boussole : design pensé pour un public senior.
+  Mon sésame : design pensé pour un public senior.
   Priorités accessibilité (cible RGAA / WCAG 2.1 AA) :
   - taille de texte de base confortable (18px),
   - contrastes élevés,
@@ -10,26 +10,29 @@
 */
 
 :root {
-  --background: #ffffff;
-  --foreground: #161616;
+  /* Direction "chaleur humaine" : le ton d'une association proche,
+     pas d'une administration. Fond crème, sable, terracotta, olive. */
+  --background: #fdfbf7;
+  --foreground: #2b2118;
 
-  /* Bleu institutionnel profond (direction "service public") */
-  --brand: #000091;
-  --brand-dark: #00006d;
-  --brand-light: #e3e3fd;
+  /* Terracotta : couleur principale (contraste 5.9:1 avec le blanc,
+     utilisable en texte large et en fond de bouton avec texte blanc) */
+  --brand: #a34a24;
+  --brand-dark: #7f3618;
+  --brand-light: #f8e9e1;
 
-  /* Vert "argent retrouvé" pour les montants positifs (contraste AA) */
-  --money: #15663b;
-  --money-light: #e6f4ec;
+  /* Olive "argent retrouvé" pour les montants positifs (contraste AA) */
+  --money: #556337;
+  --money-light: #eef2e3;
 
   /* Ambre pour "à vérifier" (contraste AA, y compris petit texte) */
   --warn: #7a5200;
   --warn-light: #fdf3da;
 
-  /* Gris secondaire assombri pour atteindre 4.5:1 sur le fond clair */
-  --muted: #4a5568;
-  --border: #dddddd;
-  --card: #f6f6f6;
+  /* Gris chaud assombri pour atteindre 4.5:1 sur le fond crème et le sable */
+  --muted: #5f5548;
+  --border: #ded3c0;
+  --card: #f5efe3;
 }
 
 @theme inline {
@@ -45,7 +48,7 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-card: var(--card);
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-sans: var(--font-atkinson), system-ui, sans-serif;
 }
 
 html {

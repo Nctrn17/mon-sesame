@@ -1,26 +1,29 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Atkinson_Hyperlegible } from "next/font/google";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SITE_URL } from "./site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+/* Police dessinée pour la basse vision (Braille Institute) :
+   formes de lettres non ambiguës, adaptée au public senior. */
+const atkinson = Atkinson_Hyperlegible({
+  variable: "--font-atkinson",
+  weight: ["400", "700"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Boussole : vos aides de retraité, sans rien laisser passer",
+  title: "Mon sésame : vos aides de retraité, sans rien laisser passer",
   description:
     "Découvrez en quelques minutes les aides, exonérations et tarifs réduits auxquels vous avez droit. Service gratuit, sans inscription obligatoire.",
   openGraph: {
-    title: "Boussole : vos aides de retraité, sans rien laisser passer",
+    title: "Mon sésame : vos aides de retraité, sans rien laisser passer",
     description:
       "Répondez à une douzaine de questions simples et découvrez les aides auxquelles vous avez droit. Gratuit, anonyme, sans inscription.",
     url: SITE_URL,
-    siteName: "Boussole",
+    siteName: "Mon sésame",
     locale: "fr_FR",
     type: "website",
   },
@@ -32,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="fr" className={`${atkinson.variable} h-full antialiased`}>
       <body className="bg-background text-foreground flex min-h-full flex-col">
         <a
           href="#contenu"
