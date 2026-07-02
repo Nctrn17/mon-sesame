@@ -3,7 +3,7 @@
  *
  * Les descriptions renvoyées par data.inclusion contiennent du markdown brut
  * (titres « ### », gras « **...** », liens « [texte](url) », commentaires HTML,
- * astérisques échappés...). Le public de Boussole est peu à l'aise avec la
+ * astérisques échappés...). Le public de Mon sésame est peu à l'aise avec la
  * technologie : on retire toute cette syntaxe et on tronque proprement à la fin
  * d'un mot pour n'afficher qu'un résumé court et clair.
  */

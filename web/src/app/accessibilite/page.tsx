@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Accessibilité : Boussole",
-  description: "Engagement d'accessibilité du service Boussole.",
+  title: "Accessibilité : Mon sésame",
+  description: "Engagement d'accessibilité du service Mon sésame.",
 };
 
 export default function AccessibilitePage() {
@@ -11,7 +11,7 @@ export default function AccessibilitePage() {
       <h1 className="text-3xl font-bold text-foreground">Accessibilité</h1>
 
       <p className="mt-4 text-lg leading-relaxed">
-        Boussole s&apos;adresse d&apos;abord aux personnes retraitées et à leurs proches. Le
+        Mon sésame s&apos;adresse d&apos;abord aux personnes retraitées et à leurs proches. Le
         site est conçu pour être lisible et utilisable par le plus grand nombre : texte
         agrandi par défaut, contrastes élevés, navigation possible entièrement au clavier,
         compatibilité avec les lecteurs d&apos;écran, respect du réglage « réduire les

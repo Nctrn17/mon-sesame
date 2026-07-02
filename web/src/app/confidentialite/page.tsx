@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Données personnelles : Boussole",
+  title: "Données personnelles : Mon sésame",
   description:
-    "Ce que Boussole fait de vos réponses : rien n'est conservé, aucun compte n'est requis.",
+    "Ce que Mon sésame fait de vos réponses : rien n'est conservé, aucun compte n'est requis.",
 };
 
 export default function ConfidentialitePage() {
@@ -12,7 +12,7 @@ export default function ConfidentialitePage() {
       <h1 className="text-3xl font-bold text-foreground">Vos données personnelles</h1>
 
       <p className="mt-4 text-lg leading-relaxed">
-        Boussole est conçu pour fonctionner sans conserver vos informations. Cette page
+        Mon sésame est conçu pour fonctionner sans conserver vos informations. Cette page
         explique simplement ce qui se passe quand vous utilisez le simulateur.
       </p>
 

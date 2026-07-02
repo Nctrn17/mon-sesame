@@ -4,7 +4,7 @@ export function SiteFooter() {
   return (
     <footer className="print:hidden mt-16 border-t border-border bg-card">
       <div className="mx-auto max-w-5xl px-4 py-8 text-base text-muted">
-        <p className="font-medium text-foreground">Boussole, vos droits de retraité</p>
+        <p className="font-medium text-foreground">Mon sésame, vos droits de retraité</p>
         <p className="mt-2 max-w-2xl">
           Service d&apos;information gratuit. Les résultats sont des estimations non
           contractuelles : seuls les organismes compétents décident de l&apos;attribution et du

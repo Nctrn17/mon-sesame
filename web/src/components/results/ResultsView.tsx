@@ -76,7 +76,7 @@ export function ResultsView({
       </div>
 
       <p className="hidden print:block mt-2 text-muted">
-        Bilan Boussole du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
+        Bilan Mon sésame du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
       </p>
 
       <p className="mt-4 text-muted">

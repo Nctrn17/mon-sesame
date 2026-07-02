@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Mentions légales : Boussole",
-  description: "Mentions légales du service Boussole.",
+  title: "Mentions légales : Mon sésame",
+  description: "Mentions légales du service Mon sésame.",
 };
 
 /*
@@ -16,7 +16,7 @@ export default function MentionsLegalesPage() {
 
       <h2 className="mt-8 text-2xl font-semibold text-foreground">Éditeur du site</h2>
       <p className="mt-3 text-lg leading-relaxed">
-        Le site Boussole est édité par [Nom ou raison sociale de l&apos;éditeur],
+        Le site Mon sésame est édité par [Nom ou raison sociale de l&apos;éditeur],
         [adresse], joignable à l&apos;adresse [adresse électronique de contact].
       </p>
       <p className="mt-3 text-lg leading-relaxed">
@@ -31,7 +31,7 @@ export default function MentionsLegalesPage() {
 
       <h2 className="mt-8 text-2xl font-semibold text-foreground">Nature du service</h2>
       <p className="mt-3 text-lg leading-relaxed">
-        Boussole est un service d&apos;information gratuit. Les résultats affichés sont des
+        Mon sésame est un service d&apos;information gratuit. Les résultats affichés sont des
         estimations non contractuelles, fondées sur des sources officielles. Seuls les
         organismes compétents (caisses de retraite, départements, communes, administrations)
         décident de l&apos;attribution et du montant des aides.
