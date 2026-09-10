@@ -56,7 +56,7 @@ function evaluateAspa(ctx: EvalContext): AidVerdict {
         estimatedAmountLabel: `≈ ${formatEuros(annuel)} / an`,
         explanation: [
           `Vous avez ${age} ans et des revenus modestes : les conditions sont a priori remplies.`,
-          `L'ASPA complète vos ressources jusqu'à ${formatEuros(plafondMensuel)} / mois pour votre foyer.`,
+          "L'ASPA complète vos ressources jusqu'au plafond garanti pour votre foyer.",
         ],
       };
     }
@@ -102,7 +102,7 @@ function evaluateAsi(ctx: EvalContext): AidVerdict {
   if (age >= ASI.ageMax) {
     return {
       status: "not_eligible",
-      explanation: [`À partir de ${ASI.ageMax} ans, c'est l'ASPA qui prend le relais de l'ASI.`],
+      explanation: ["À l'âge légal de départ à la retraite (62 à 64 ans selon votre année de naissance), c'est l'ASPA qui prend le relais de l'ASI."],
     };
   }
   if (profile.taxStatus === "imposable") {
@@ -131,7 +131,7 @@ export const minimaDefinitions: AidDefinition[] = [
       authority: "Versée par votre caisse de retraite (CARSAT, MSA...)",
       impact: "eleve",
       valueStatement:
-        "Complète votre retraite chaque mois jusqu'à un revenu minimum garanti (environ 1 040 € pour une personne seule).",
+        "Complète une petite retraite chaque mois, jusqu'à un revenu minimum garanti.",
       description:
         "Un complément de revenu pour les personnes âgées aux ressources modestes : l'allocation complète vos revenus jusqu'à un montant minimum garanti.",
       whyOftenMissed:
@@ -144,7 +144,7 @@ export const minimaDefinitions: AidDefinition[] = [
         sentenceToSay:
           "Je souhaite déposer une demande d'ASPA, l'allocation de solidarité aux personnes âgées.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateAspa,
   },
@@ -168,7 +168,7 @@ export const minimaDefinitions: AidDefinition[] = [
         url: ASI.source.url,
         sentenceToSay: "Je souhaite faire une demande d'allocation supplémentaire d'invalidité (ASI).",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateAsi,
   },

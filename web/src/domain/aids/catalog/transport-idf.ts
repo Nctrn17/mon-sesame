@@ -9,12 +9,15 @@ function evaluateAmethyste(ctx: EvalContext): AidVerdict {
     return { status: "unknown", explanation: ["Indiquez votre date de naissance."] };
   }
 
-  const ageOk = age >= TRANSPORT_IDF.ageAmethyste || !!profile.disability;
+  const ageOk =
+    age >= TRANSPORT_IDF.ageAmethyste ||
+    (age >= TRANSPORT_IDF.ageAmethysteInapte && !!profile.disability) ||
+    !!profile.disability;
   if (!ageOk) {
     return {
       status: "not_eligible",
       explanation: [
-        `Le forfait Améthyste est accessible dès ${TRANSPORT_IDF.ageAmethyste} ans pour les retraités sans activité (et sans condition d'âge en cas de handicap).`,
+        `Le forfait Améthyste est accessible dès ${TRANSPORT_IDF.ageAmethyste} ans pour les retraités sans activité (${TRANSPORT_IDF.ageAmethysteInapte} ans en cas d'inaptitude au travail, sans condition d'âge pour les adultes handicapés).`,
       ],
     };
   }
@@ -34,7 +37,7 @@ function evaluateAmethyste(ctx: EvalContext): AidVerdict {
   const retro = yearsEligible * TRANSPORT_IDF.valeurAnnuelleNavigo;
   const deptNote =
     dept === "75"
-      ? "À Paris, le forfait est gratuit pour les seniors éligibles."
+      ? "À Paris, le forfait est gratuit si vous n'êtes pas imposable ; sinon une participation annuelle est demandée."
       : "Selon votre département, le forfait est gratuit ou avec une participation modérée.";
 
   return {
@@ -44,6 +47,7 @@ function evaluateAmethyste(ctx: EvalContext): AidVerdict {
     retroactiveEstimate: retro,
     explanation: [
       `Dès ${TRANSPORT_IDF.ageAmethyste} ans, en tant que retraité non imposable, vous pouvez voyager gratuitement ou à prix très réduit dans les transports d'Île-de-France.`,
+      "Chaque département fixe ses propres conditions (âge, ressources, participation) : vérifiez les vôtres au CCAS.",
       deptNote,
       "C'est typiquement le droit qu'on découvre trop tard : il se demande au conseil départemental ou au CCAS, jamais au guichet du transporteur.",
     ],
@@ -54,6 +58,12 @@ function evaluateNavigoSenior(ctx: EvalContext): AidVerdict {
   const { age, profile } = ctx;
   if (age == null) {
     return { status: "unknown", explanation: ["Indiquez votre date de naissance."] };
+  }
+  if (profile.retirement === "actif") {
+    return {
+      status: "not_eligible",
+      explanation: ["Le forfait Navigo Senior est réservé aux personnes sans activité professionnelle (ou à moins d'un mi-temps)."],
+    };
   }
   if (age < TRANSPORT_IDF.ageNavigoSenior) {
     return {
@@ -141,7 +151,7 @@ export const transportIdfDefinitions: AidDefinition[] = [
         sentenceToSay:
           "Je suis retraité(e) non imposable et je voudrais demander le forfait Améthyste pour les transports.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateAmethyste,
   },
@@ -164,7 +174,7 @@ export const transportIdfDefinitions: AidDefinition[] = [
         url: TRANSPORT_IDF.source.url,
         sentenceToSay: "Je voudrais souscrire le forfait Navigo Senior.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateNavigoSenior,
   },

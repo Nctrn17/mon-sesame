@@ -76,7 +76,7 @@ export const energieDefinitions: AidDefinition[] = [
         sentenceToSay:
           "Je vérifie mon éligibilité au chèque énergie et, si besoin, je le réclame sur le portail officiel.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateChequeEnergie,
   },
@@ -92,7 +92,7 @@ export const energieDefinitions: AidDefinition[] = [
       valueStatement: "Pas de coupure d'électricité ni de gaz l'hiver, même en cas d'impayé.",
       description: "La trêve hivernale interdit les coupures du 1er novembre au 31 mars ; les bénéficiaires du chèque énergie sont encore plus protégés.",
       whyOftenMissed: "Par peur ou méconnaissance, on n'ose pas prévenir son fournisseur et demander un échéancier.",
-      source: { label: "service-public.fr : coupures d'énergie", url: "https://www.service-public.fr/particuliers/vosdroits/F1478" },
+      source: { label: "energie-info.fr (médiateur national de l'énergie) : difficultés de paiement", url: "https://www.energie-info.fr/fiche_pratique/jai-des-difficultes-de-paiement/" },
       howToApply: {
         organism: "Votre fournisseur d'énergie (et le FSL en cas d'impayé)",
         sentenceToSay: "J'ai du mal à payer ma facture, je voudrais un échéancier et connaître mes protections.",

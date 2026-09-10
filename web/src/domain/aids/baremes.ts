@@ -36,17 +36,18 @@ export const ASPA = {
   plafondMensuelSeul: 1043.59,
   plafondMensuelCouple: 1620.18,
   source: {
-    label: "service-public.fr : ASPA",
-    url: "https://www.service-public.fr/particuliers/vosdroits/F16871",
+    label: "service-public.gouv.fr : ASPA",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F16871",
   },
 } as const;
 
 /** ASI : allocation supplémentaire d'invalidité (passerelle avant l'âge de la retraite). */
 export const ASI = {
-  ageMax: 62,
+  // L'ASI cesse à l'âge légal de départ à la retraite (62 à 64 ans selon l'année de naissance).
+  ageMax: 64,
   source: {
-    label: "service-public.fr : ASI",
-    url: "https://www.service-public.fr/particuliers/vosdroits/F16940",
+    label: "service-public.gouv.fr : ASI",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F16940",
   },
 } as const;
 
@@ -57,8 +58,8 @@ export const CSS = {
   plafondAnnuelSeulParticipation: 14069,
   plafondAnnuelCoupleGratuite: 15632,
   source: {
-    label: "service-public.fr : Complémentaire santé solidaire",
-    url: "https://www.service-public.fr/particuliers/vosdroits/F10027",
+    label: "service-public.gouv.fr : Complémentaire santé solidaire",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F10027",
   },
 } as const;
 
@@ -79,12 +80,12 @@ export const APA = {
   ageMin: 60,
   // Plafonds mensuels du plan d'aide selon le GIR (euros/mois).
   plafondMensuelGir1: 2080.33,
-  plafondMensuelGir2: 1681.36,
-  plafondMensuelGir3: 1215.0,
+  plafondMensuelGir2: 1682.3,
+  plafondMensuelGir3: 1215.99,
   plafondMensuelGir4: 811.52,
   source: {
     label: "pour-les-personnes-agees.gouv.fr : APA",
-    url: "https://www.pour-les-personnes-agees.gouv.fr/preserver-son-autonomie-s-informer-et-anticiper/perte-d-autonomie-evaluation-et-droits/lapa-a-domicile",
+    url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/l-apa-a-domicile",
   },
 } as const;
 
@@ -94,8 +95,8 @@ export const ACTION_SOCIALE_CARSAT = {
   // Plan d'aide personnalisé : ordre de grandeur annuel (approx).
   plafondAnnuelApprox: 3000,
   source: {
-    label: "lassuranceretraite.fr : bien vieillir chez soi",
-    url: "https://www.lassuranceretraite.fr/portail-info/hors-menu/annexe/services-au-quotidien/aides-action-sociale.html",
+    label: "lassuranceretraite.fr : bien chez soi",
+    url: "https://www.lassuranceretraite.fr/portail-info/home/retraite/vie-retraite-bien-vieillir/bien-chez-soi.html",
   },
 } as const;
 
@@ -118,27 +119,29 @@ export const TAXE_FONCIERE = {
   ageDegrevement: 65,
   degrevementForfaitaire: 100,
   // Plafond de RFR pour 1 part (approx) + majoration par demi-part.
-  plafondRfrUnePart: 12679,
-  majorationParDemiPart: 3388,
+  plafondRfrUnePart: 12793,
+  majorationParDemiPart: 3416,
   // Économie annuelle moyenne approximative pour un propriétaire en IDF.
   economieAnnuelleApprox: 700,
   source: {
-    label: "service-public.fr : exonération de taxe foncière",
-    url: "https://www.service-public.fr/particuliers/vosdroits/F59",
+    label: "service-public.gouv.fr : exonération de taxe foncière",
+    url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F59",
   },
 } as const;
 
 /** Transport senior en Île-de-France (forfait Améthyste et Navigo Senior). */
 export const TRANSPORT_IDF = {
-  ageAmethyste: 60,
+  ageAmethyste: 65,
+  // 60 ans en cas d'inaptitude au travail (invalidité, AAH) selon les départements.
+  ageAmethysteInapte: 60,
   ageNavigoSenior: 62,
   // Valeur indicative d'un Navigo annuel toutes zones (économie potentielle).
   valeurAnnuelleNavigo: 900,
   // Économie du Navigo Senior (réduction d'environ 50%).
   economieNavigoSenior: 450,
   source: {
-    label: "iledefrance-mobilites.fr : tarifs réduits",
-    url: "https://www.iledefrance-mobilites.fr/titres-et-tarifs",
+    label: "iledefrance-mobilites.fr : forfait Améthyste",
+    url: "https://www.iledefrance-mobilites.fr/titres-et-tarifs/detail/forfait-amethyste",
   },
 } as const;
 
@@ -146,7 +149,7 @@ export const TRANSPORT_IDF = {
 export const REVERSION = {
   source: {
     label: "info-retraite.fr : pension de réversion",
-    url: "https://www.info-retraite.fr/portail-info/sites/PortailInformationnel/home/le-deces-d-un-proche/la-reversion.html",
+    url: "https://www.info-retraite.fr/portail-info/sites/PortailInformationnel/home/mes-droits-a-la-retraite/ma-vie-personnelle-1/famille/pension-de-reversion-1.html",
   },
 } as const;
 

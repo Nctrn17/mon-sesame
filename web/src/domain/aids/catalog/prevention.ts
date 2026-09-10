@@ -120,7 +120,7 @@ export const preventionDefinitions: AidDefinition[] = [
       valueStatement: "La grippe gratuite dès 65 ans, et le zona recommandé et remboursé.",
       description: "Des vaccinations qui évitent des maladies graves et des hospitalisations.",
       whyOftenMissed: "Le vaccin contre le zona, récent, est très peu demandé faute d'information.",
-      source: { label: "ameli.fr : vaccination", url: "https://www.ameli.fr/assure/sante/themes/vaccination-grippe" },
+      source: { label: "ameli.fr : vaccination", url: "https://www.ameli.fr/assure/sante/assurance-maladie/campagnes-vaccination/vaccination-grippe-saisonniere" },
       howToApply: {
         organism: "Votre médecin, pharmacien ou infirmier",
         sentenceToSay: "Suis-je à jour pour les vaccins grippe et zona ?",
@@ -141,7 +141,7 @@ export const preventionDefinitions: AidDefinition[] = [
       valueStatement: "Une activité physique encadrée et adaptée, utile contre la perte d'autonomie.",
       description: "Sur prescription, un programme adapté à votre santé, souvent financé par la mutuelle ou la collectivité.",
       whyOftenMissed: "On la croit remboursée par la Sécu (ce n'est pas le cas en général) et on ne pense pas à la mutuelle.",
-      source: { label: "ameli.fr : activité physique adaptée", url: "https://www.ameli.fr/assure/sante/themes/activite-physique-sante/quels-bienfaits" },
+      source: { label: "ameli.fr : activité physique adaptée", url: "https://www.ameli.fr/assure/sante/themes/activite-physique-sante/prescription-d-activite-physique-adaptee" },
       howToApply: {
         organism: "Votre médecin (prescription) puis une Maison Sport-Santé",
         sentenceToSay: "Pourriez-vous me prescrire une activité physique adaptée ?",

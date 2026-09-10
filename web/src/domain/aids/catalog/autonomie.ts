@@ -272,7 +272,7 @@ export const autonomieDefinitions: AidDefinition[] = [
         url: APA.source.url,
         sentenceToSay: "Je souhaite déposer une demande d'APA à domicile et obtenir une évaluation de mon autonomie.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateApa,
   },
@@ -290,14 +290,14 @@ export const autonomieDefinitions: AidDefinition[] = [
       whyOftenMissed: "Souvent confondue avec l'APA à domicile ; les familles ignorent qu'elle réduit la facture de l'EHPAD.",
       source: {
         label: "pour-les-personnes-agees.gouv.fr : aides en EHPAD",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-apa-en-etablissement",
       },
       howToApply: {
         organism: "Le conseil départemental, souvent via l'établissement",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-apa-en-etablissement",
         sentenceToSay: "Je souhaite faire valoir l'APA pour réduire le tarif dépendance de l'établissement.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateApaEtablissement,
   },
@@ -314,10 +314,10 @@ export const autonomieDefinitions: AidDefinition[] = [
       description:
         "Pour les personnes âgées encore autonomes (GIR 5-6) à faibles ressources, non bénéficiaires de l'APA.",
       whyOftenMissed: "Très méconnue, distincte de l'APA et de l'action sociale des caisses de retraite.",
-      source: { label: "service-public.fr : aides aux personnes âgées", url: "https://www.service-public.fr/particuliers/vosdroits/N392" },
+      source: { label: "service-public.gouv.fr : aides aux personnes âgées", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N392" },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
-        url: "https://www.service-public.fr/particuliers/vosdroits/N392",
+        url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N392",
         sentenceToSay: "Je voudrais demander l'aide-ménagère au titre de l'aide sociale départementale.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -364,11 +364,11 @@ export const autonomieDefinitions: AidDefinition[] = [
       whyOftenMissed: "Très actionnable mais rarement présentée comme un droit ; les aides locales sont peu connues.",
       source: {
         label: "pour-les-personnes-agees.gouv.fr : téléassistance",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/les-aides-financieres-pour-installer-une-teleassistance",
       },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/les-aides-financieres-pour-installer-une-teleassistance",
         sentenceToSay: "Je voudrais installer une téléassistance et connaître les aides pour la financer.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -390,12 +390,12 @@ export const autonomieDefinitions: AidDefinition[] = [
       whyOftenMissed:
         "Le service existe dans la plupart des communes mais n'est presque jamais présenté comme un droit ; beaucoup ignorent que l'aide sociale ou l'APA peuvent le financer.",
       source: {
-        label: "service-public.fr : aide sociale pour les repas (foyer-restaurant, portage)",
-        url: "https://www.service-public.fr/particuliers/vosdroits/F245",
+        label: "service-public.gouv.fr : aide sociale pour les repas (foyer-restaurant, portage)",
+        url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F248",
       },
       howToApply: {
         organism: "Le CCAS de votre commune, ou le service autonomie du conseil départemental",
-        url: "https://www.service-public.fr/particuliers/vosdroits/F245",
+        url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F248",
         sentenceToSay:
           "Je voudrais bénéficier du portage de repas à domicile et connaître la prise en charge possible au titre de l'aide sociale.",
       },
@@ -417,7 +417,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       whyOftenMissed: "La demande doit se faire très vite (souvent avant la sortie d'hôpital) : beaucoup l'apprennent trop tard.",
       source: {
         label: "pour-les-personnes-agees.gouv.fr : sortie d'hospitalisation",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/etre-hospitalise/comment-organiser-sa-sortie-d-hospitalisation",
       },
       howToApply: {
         organism: "L'assistante sociale de l'hôpital ou votre caisse de retraite",

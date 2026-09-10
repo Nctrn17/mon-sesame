@@ -32,6 +32,8 @@ interface BaseQuestion {
   readonly id: string;
   readonly title: QuestionText;
   readonly help?: QuestionText;
+  /** « Pourquoi cette question ? » : à quoi sert la réponse, en une ou deux phrases. */
+  readonly why?: QuestionText;
   /** Condition d'affichage : la question n'est posée que si elle renvoie vrai. */
   readonly when?: (p: Profile) => boolean;
 }
@@ -81,6 +83,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "self", label: "Pour moi-même" },
       { value: "relative", label: "Pour un proche que j'aide" },
     ],
+    why: "Selon la réponse, les questions parlent de vous ou de votre proche. Si vous aidez quelqu'un, vous avez aussi des droits, que nous vérifions.",
     get: (p) => p.fillingFor,
     set: (p, v) => updateProfile(p, { fillingFor: v as Profile["fillingFor"] }),
   },
@@ -92,6 +95,7 @@ export const QUESTIONS: readonly Question[] = [
       "Quelle est la date de naissance de votre proche ?",
     ),
     help: "Elle sert à repérer les droits qui s'ouvrent à 60, 62, 65 ou 75 ans.",
+    why: "Beaucoup d'aides s'ouvrent à un âge précis. Nous comparons la date à ces seuils, rien d'autre.",
     get: (p) => p.birthDate,
     set: (p, v) => updateProfile(p, { birthDate: v }),
   },
@@ -108,6 +112,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "bientot", label: "Bientôt à la retraite" },
       { value: "actif", label: "Encore en activité" },
     ],
+    why: "Certaines aides s'adressent aux retraités, d'autres aux personnes encore en activité. La réponse sert aussi à anticiper les droits qui s'ouvriront au départ à la retraite.",
     get: (p) => p.retirement,
     set: (p, v) => updateProfile(p, { retirement: v as Profile["retirement"] }),
   },
@@ -122,6 +127,7 @@ export const QUESTIONS: readonly Question[] = [
       "Beaucoup d'aides dépendent de votre commune ou de votre département.",
       "Beaucoup d'aides dépendent de sa commune ou de son département.",
     ),
+    why: "Plusieurs aides dépendent de la commune ou du département, comme les transports en Île-de-France. Nous ne transmettons que le nom de la commune, jamais vos autres réponses.",
   },
   {
     id: "maritalSituation",
@@ -134,6 +140,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "seul", label: "Seul(e)" },
       { value: "couple", label: "En couple" },
     ],
+    why: "Les plafonds de ressources et certains droits, comme la pension de réversion, ne sont pas les mêmes selon qu'on vit seul ou en couple.",
     get: (p) => p.maritalSituation,
     set: (p, v) => updateProfile(p, { maritalSituation: v as Profile["maritalSituation"] }),
   },
@@ -146,6 +153,7 @@ export const QUESTIONS: readonly Question[] = [
     ),
     help: "Le veuvage ouvre des droits (la pension de réversion) souvent oubliés.",
     options: OUI_NON,
+    why: "Le veuvage ouvre des droits particuliers, souvent oubliés : réversion, allocation veuvage, règlement des obsèques.",
     get: boolGet((p) => p.recentlyWidowed),
     set: (p, v) => updateProfile(p, { recentlyWidowed: v === "oui" }),
   },
@@ -165,6 +173,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "non_imposable", label: "Non, pas imposable" },
       { value: "inconnu", label: "Je ne sais pas" },
     ],
+    why: "C'est notre seul repère de ressources. « Non imposable » suffit à repérer la plupart des aides sous condition de revenus, sans demander de montant.",
     get: (p) => p.taxStatus,
     set: (p, v) => updateProfile(p, { taxStatus: v as Profile["taxStatus"] }),
   },
@@ -178,6 +187,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "heberge", label: "Hébergé(e) par de la famille ou des amis" },
       { value: "etablissement", label: "En établissement (maison de retraite, EHPAD)" },
     ],
+    why: "Aides au logement, adaptation du logement, taxe foncière ou aide en établissement : chaque situation ouvre des droits différents.",
     get: (p) => p.housing,
     set: (p, v) => updateProfile(p, { housing: v as Profile["housing"] }),
   },
@@ -195,6 +205,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "souvent", label: "Souvent" },
       { value: "quotidien", label: "Tous les jours" },
     ],
+    why: "Le besoin d'aide au quotidien oriente vers l'allocation d'autonomie (APA), l'aide-ménagère ou l'action sociale de la caisse de retraite.",
     get: (p) => p.autonomy,
     set: (p, v) => updateProfile(p, { autonomy: v as Profile["autonomy"] }),
   },
@@ -207,6 +218,7 @@ export const QUESTIONS: readonly Question[] = [
     ),
     help: "Par exemple l'allocation aux adultes handicapés (AAH), une carte mobilité inclusion ou une pension d'invalidité.",
     options: OUI_NON,
+    why: "Une reconnaissance de handicap ou d'invalidité ouvre des droits spécifiques et abaisse l'âge de certaines aides.",
     get: boolGet((p) => p.disability),
     set: (p, v) => updateProfile(p, { disability: v === "oui" }),
   },
@@ -219,6 +231,7 @@ export const QUESTIONS: readonly Question[] = [
     ),
     help: "Ménage, aide à la personne, jardinage, téléassistance... Même occasionnel. Cela ouvre droit à un crédit d'impôt.",
     options: OUI_NON,
+    why: "Ces dépenses ouvrent droit à un crédit d'impôt, remboursé même sans impôt à payer.",
     get: boolGet((p) => p.usesHomeHelp),
     set: (p, v) => updateProfile(p, { usesHomeHelp: v === "oui" }),
   },
@@ -231,6 +244,7 @@ export const QUESTIONS: readonly Question[] = [
     // inutile de poser la question.
     when: (p) => p.fillingFor !== "relative",
     options: OUI_NON,
+    why: "Aider un proche ouvre des droits pour vous aussi : un congé indemnisé et des solutions de répit.",
     get: boolGet((p) => p.isCaregiver),
     set: (p, v) => updateProfile(p, { isCaregiver: v === "oui" }),
   },
@@ -252,6 +266,7 @@ export const QUESTIONS: readonly Question[] = [
       { value: "mixte", label: "Une carrière mixte (privé et public, ou plusieurs régimes)" },
       { value: "inconnu", label: "Je ne sais pas" },
     ],
+    why: "Cela sert uniquement à vous orienter vers la bonne caisse de retraite et son action sociale.",
     get: (p) => p.scheme,
     set: (p, v) => updateProfile(p, { scheme: v as Profile["scheme"] }),
   },

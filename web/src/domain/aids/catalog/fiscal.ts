@@ -1,4 +1,4 @@
-import { TAXE_FONCIERE, formatEuros } from "@/domain/aids/baremes";
+import { TAXE_FONCIERE } from "@/domain/aids/baremes";
 import type { AidDefinition } from "@/domain/aids/types";
 import type { AidVerdict, EvalContext } from "@/domain/eligibility/types";
 
@@ -21,8 +21,12 @@ function evaluateTaxeFonciere(ctx: EvalContext): AidVerdict {
   }
   if (age < TAXE_FONCIERE.ageDegrevement) {
     return {
-      status: "not_eligible",
-      explanation: [`Les avantages de taxe foncière liés à l'âge commencent à ${TAXE_FONCIERE.ageDegrevement} ans.`],
+      status: "to_check",
+      explanation: [
+        `Les avantages de taxe foncière liés à l'âge commencent à ${TAXE_FONCIERE.ageDegrevement} ans.`,
+        "Exception : si vous touchez l'ASPA ou l'ASI, l'exonération totale s'applique sans condition d'âge.",
+      ],
+      missingInfo: ["Percevez-vous l'ASPA ou l'ASI ?"],
     };
   }
 
@@ -50,7 +54,7 @@ function evaluateTaxeFonciere(ctx: EvalContext): AidVerdict {
     return {
       status: "eligible",
       explanation: [
-        `Entre ${TAXE_FONCIERE.ageDegrevement} et ${TAXE_FONCIERE.ageExonerationTotale} ans, sous condition de ressources, vous bénéficiez d'un dégrèvement de ${formatEuros(TAXE_FONCIERE.degrevementForfaitaire)} sur la taxe foncière.`,
+        `Entre ${TAXE_FONCIERE.ageDegrevement} et ${TAXE_FONCIERE.ageExonerationTotale} ans, sous condition de ressources, vous bénéficiez d'une réduction forfaitaire de la taxe foncière.`,
       ],
     };
   }
@@ -195,14 +199,14 @@ export const fiscalDefinitions: AidDefinition[] = [
         "Selon votre âge et vos revenus, la taxe foncière de votre résidence principale peut être réduite de 100 € ou totalement supprimée.",
       whyOftenMissed:
         "Souvent appliquée d'office, mais perdue après un changement de situation (décès du conjoint, entrée en établissement) si rien n'est signalé.",
-      source: { label: "service-public.fr : exonération de taxe foncière", url: "https://www.service-public.fr/particuliers/vosdroits/F59" },
+      source: { label: "service-public.gouv.fr : exonération de taxe foncière", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F59" },
       howToApply: {
         organism: "Votre centre des impôts (espace particulier sur impots.gouv.fr)",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F59",
         sentenceToSay:
           "Je pense remplir les conditions d'exonération de taxe foncière liée à l'âge et aux ressources : pouvez-vous vérifier ?",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateTaxeFonciere,
   },
@@ -221,13 +225,13 @@ export const fiscalDefinitions: AidDefinition[] = [
         "Pour le ménage, l'aide à la personne, le jardinage : 50 % de la dépense vous est rendue, sous forme de crédit d'impôt.",
       whyOftenMissed:
         "C'est un crédit (et non une réduction) : beaucoup de retraités non imposables croient à tort ne pas y avoir droit.",
-      source: { label: "impots.gouv.fr : services à la personne", url: "https://www.impots.gouv.fr/" },
+      source: { label: "impots.gouv.fr : crédit d'impôt emploi à domicile", url: "https://www.impots.gouv.fr/particulier/questions/comment-beneficier-du-credit-dimpot-pour-lemploi-dun-salarie-domicile" },
       howToApply: {
         organism: "Les impôts (via la déclaration de revenus ; avance immédiate possible avec le CESU+)",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.impots.gouv.fr/particulier/emploi-domicile",
         sentenceToSay: "Je voudrais bénéficier du crédit d'impôt pour l'emploi d'une aide à domicile.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateCreditImpotDomicile,
   },
@@ -243,13 +247,13 @@ export const fiscalDefinitions: AidDefinition[] = [
       valueStatement: "Réduit vos impôts de 25 % des frais de dépendance et d'hébergement en EHPAD.",
       description: "Pour les personnes en EHPAD qui paient l'impôt sur le revenu.",
       whyOftenMissed: "Les familles oublient de déclarer ces frais ; la réduction peut atteindre 2 500 € par an et par personne.",
-      source: { label: "impots.gouv.fr : frais de dépendance", url: "https://www.impots.gouv.fr/" },
+      source: { label: "impots.gouv.fr : réduction d'impôt en EHPAD", url: "https://www.impots.gouv.fr/particulier/questions/je-suis-entree-en-etablissement-pour-personne-dependante-comment-puis-je" },
       howToApply: {
         organism: "Les impôts, via la déclaration de revenus",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.impots.gouv.fr/particulier/questions/je-suis-entree-en-etablissement-pour-personne-dependante-comment-puis-je",
         sentenceToSay: "Je souhaite déclarer les frais d'hébergement en EHPAD pour la réduction d'impôt.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateReductionEhpad,
   },
@@ -267,10 +271,10 @@ export const fiscalDefinitions: AidDefinition[] = [
         "Pour les personnes seules ayant élevé un enfant, ou les anciens combattants de 74 ans et plus (et leurs veufs ou veuves).",
       whyOftenMissed:
         "La case à cocher est massivement oubliée, alors qu'elle réduit l'impôt chaque année.",
-      source: { label: "impots.gouv.fr : parts et quotient familial", url: "https://www.impots.gouv.fr/" },
+      source: { label: "impots.gouv.fr : je vis seul(e) sans enfant à charge", url: "https://www.impots.gouv.fr/particulier/questions/je-vis-seule-et-nai-plus-denfants-charge-quelles-consequences" },
       howToApply: {
         organism: "Les impôts, en cochant la bonne case sur votre déclaration",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.impots.gouv.fr/particulier/questions/je-suis-ancien-combattant-ou-veuve-dancien-combattant-cela-modifie-t-il-mon",
         sentenceToSay:
           "Je pense avoir droit à une demi-part supplémentaire : pouvez-vous vérifier ma déclaration ?",
       },
@@ -290,10 +294,10 @@ export const fiscalDefinitions: AidDefinition[] = [
       valueStatement: "Votre ancien logement garde le régime « résidence principale » (pas de surtaxe, exonération possible).",
       description: "Pour les personnes en établissement qui conservent leur logement vide.",
       whyOftenMissed: "Sans déclaration d'occupation aux impôts, le logement est taxé d'office comme résidence secondaire.",
-      source: { label: "service-public.fr : taxe d'habitation", url: "https://www.service-public.fr/particuliers/vosdroits/F42" },
+      source: { label: "impots.gouv.fr : départ en maison de retraite et exonérations", url: "https://www.impots.gouv.fr/particulier/questions/je-suis-exonere-de-taxe-dhabitation-et-de-taxe-fonciere-je-vais-prochainement" },
       howToApply: {
         organism: "Les impôts, via « Gérer mes biens immobiliers » sur impots.gouv.fr",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.impots.gouv.fr/particulier/questions/je-suis-exonere-de-taxe-dhabitation-et-de-taxe-fonciere-je-vais-prochainement",
         sentenceToSay: "Je suis en établissement et je conserve mon logement : pouvez-vous vérifier ma taxe foncière et d'habitation ?",
       },
       lastVerifiedAt: "2026-06-04",
@@ -312,10 +316,10 @@ export const fiscalDefinitions: AidDefinition[] = [
       valueStatement: "Taux de CSG et abattements : vérifiez qu'ils sont à jour, et réclamez un trop-prélevé.",
       description: "Des avantages automatiques (CSG réduite, abattements) mal recalculés après un changement de situation.",
       whyOftenMissed: "Après une baisse de revenus ou un veuvage, on continue parfois de payer trop, sans le savoir.",
-      source: { label: "service-public.fr : CSG sur les pensions", url: "https://www.service-public.fr/particuliers/vosdroits/F2971" },
+      source: { label: "service-public.gouv.fr : CSG et CRDS sur les revenus de remplacement", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2971" },
       howToApply: {
         organism: "Votre centre des impôts et votre caisse de retraite",
-        url: "https://www.impots.gouv.fr/",
+        url: "https://www.impots.gouv.fr/particulier",
         sentenceToSay: "Mes revenus ont baissé : mon taux de CSG et mes abattements sont-ils bien à jour ?",
       },
       lastVerifiedAt: "2026-06-04",

@@ -17,7 +17,7 @@ function evaluateCss(ctx: EvalContext): AidVerdict {
     return {
       status: "to_check",
       explanation: [
-        "Même imposable, si vos revenus sont juste au-dessus du seuil, vous pouvez accéder à la CSS pour quelques euros par mois.",
+        "Même imposable, si vos revenus sont juste au-dessus du seuil, vous pouvez accéder à la CSS moyennant une petite participation mensuelle (moins d'un euro par jour).",
       ],
       missingInfo: ["Le montant de vos ressources annuelles."],
     };
@@ -87,13 +87,13 @@ export const santeDefinitions: AidDefinition[] = [
       description:
         "Une complémentaire santé gratuite ou à très faible coût (selon vos revenus) qui supprime ou réduit fortement ce qui reste à votre charge.",
       whyOftenMissed: "Le non-recours est très élevé chez les seniors modestes ; beaucoup de bénéficiaires de l'ASPA y ont droit sans le demander.",
-      source: { label: "service-public.fr : CSS", url: CSS.source.url },
+      source: { label: "service-public.gouv.fr : CSS", url: CSS.source.url },
       howToApply: {
         organism: "Votre caisse d'Assurance Maladie (compte ameli) ou la MSA",
         url: CSS.source.url,
         sentenceToSay: "Je voudrais faire une demande de Complémentaire santé solidaire.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateCss,
   },
@@ -131,7 +131,7 @@ export const santeDefinitions: AidDefinition[] = [
       valueStatement: "Des lunettes, prothèses dentaires et appareils auditifs sans reste à charge.",
       description: "Un panier d'équipements de qualité intégralement remboursé, à demander à votre professionnel de santé.",
       whyOftenMissed: "Les professionnels proposent souvent d'abord des équipements plus chers, hors panier 100% Santé.",
-      source: { label: "service-public.fr : 100% Santé", url: "https://www.service-public.fr/particuliers/vosdroits/F35057" },
+      source: { label: "securite-sociale.fr : 100% Santé", url: "https://www.securite-sociale.fr/home/dossiers/galerie-dossiers/tous-les-dossiers/100-sante--des-soins-pour-tous-1.html" },
       howToApply: {
         organism: "Votre opticien, dentiste ou audioprothésiste",
         sentenceToSay: "Pouvez-vous me faire un devis avec l'offre 100% Santé ?",
@@ -173,7 +173,7 @@ export const santeDefinitions: AidDefinition[] = [
       valueStatement: "Une cure thermale prise en charge, et l'hébergement aidé si revenus modestes.",
       description: "18 jours de soins en établissement conventionné, sur prescription médicale.",
       whyOftenMissed: "Perçue comme du tourisme non remboursé ; l'aide à l'hébergement pour revenus modestes est ignorée.",
-      source: { label: "ameli.fr : cure thermale", url: "https://www.ameli.fr/assure/remboursements/se-faire-rembourser/cure-thermale" },
+      source: { label: "ameli.fr : cure thermale", url: "https://www.ameli.fr/assure/remboursements/rembourse/cure-thermale" },
       howToApply: {
         organism: "Votre médecin (prescription) puis l'Assurance Maladie",
         sentenceToSay: "Une cure thermale serait-elle indiquée pour moi ?",

@@ -85,12 +85,12 @@ export const retraiteDefinitions: AidDefinition[] = [
       valueStatement: "Travailler à temps partiel tout en touchant déjà une partie de votre retraite.",
       description: "Dès 60 ans, une transition en douceur vers la retraite, qui continue d'améliorer vos droits.",
       whyOftenMissed: "Crue réservée à certains métiers ; l'abaissement à 60 ans est récent et mal connu.",
-      source: { label: "lassuranceretraite.fr : retraite progressive", url: "https://www.lassuranceretraite.fr/portail-info/home/actif/age-depart/retraite-progressive.html" },
+      source: { label: "lassuranceretraite.fr : retraite progressive", url: "https://www.lassuranceretraite.fr/portail-info/home/actif/je-souhaite-partir-plus-tot/retraite-progressive.html" },
       howToApply: {
         organism: "Votre caisse de retraite (et accord de l'employeur sur le temps partiel)",
         sentenceToSay: "Je souhaite préparer une retraite progressive.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateRetraiteProgressive,
   },
@@ -105,7 +105,7 @@ export const retraiteDefinitions: AidDefinition[] = [
       valueStatement: "Travailler en gardant votre retraite, et parfois acquérir une seconde pension.",
       description: "Reprendre une activité après la retraite, sans perdre sa pension (cumul intégral si taux plein).",
       whyOftenMissed: "Peu savent que, depuis 2023, l'activité après la retraite peut créer une nouvelle pension.",
-      source: { label: "service-public.fr : cumul emploi-retraite", url: "https://www.service-public.fr/particuliers/vosdroits/F13871" },
+      source: { label: "service-public.gouv.fr : cumul emploi-retraite", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F13243" },
       howToApply: {
         organism: "Votre caisse de retraite",
         sentenceToSay: "Je voudrais reprendre une activité en cumul emploi-retraite.",
@@ -125,7 +125,7 @@ export const retraiteDefinitions: AidDefinition[] = [
       valueStatement: "Améliorer votre future pension en rachetant des trimestres manquants.",
       description: "Racheter jusqu'à 12 trimestres (études, années incomplètes) avant le départ, avec un avantage fiscal.",
       whyOftenMissed: "Levier d'optimisation à activer avant la liquidation, dont l'intérêt fiscal est méconnu.",
-      source: { label: "lassuranceretraite.fr : versements pour la retraite", url: "https://www.lassuranceretraite.fr/portail-info/home/actif/montant-retraite/augmenter-retraite/versement-pour-la-retraite.html" },
+      source: { label: "lassuranceretraite.fr : racheter des trimestres", url: "https://www.lassuranceretraite.fr/portail-info/home/actif/ma-carriere/rachat-trimestres-retraite.html" },
       howToApply: {
         organism: "Votre caisse de retraite",
         sentenceToSay: "Je voudrais étudier un rachat de trimestres.",

@@ -47,11 +47,11 @@ export const aidantDefinitions: AidDefinition[] = [
       whyOftenMissed: "Les aidants pensent rarement à leurs propres droits, alors qu'ils s'épuisent.",
       source: {
         label: "pour-les-personnes-agees.gouv.fr : solutions pour les aidants",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/soutien-financier",
       },
       howToApply: {
         organism: "La CAF ou la MSA (AJPA) ; le département pour le répit (via l'APA du proche)",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/soutien-financier/l-allocation-journaliere-du-proche-aidant-qu-est-ce-que-c-est",
         sentenceToSay:
           "J'aide un proche : je voudrais l'allocation journalière du proche aidant et des solutions de répit.",
       },

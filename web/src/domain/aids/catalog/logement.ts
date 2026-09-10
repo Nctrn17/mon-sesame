@@ -1,7 +1,7 @@
-import { MAPRIMEADAPT, formatEuros } from "@/domain/aids/baremes";
+import { MAPRIMEADAPT } from "@/domain/aids/baremes";
 import type { AidDefinition } from "@/domain/aids/types";
 import type { AidVerdict, EvalContext } from "@/domain/eligibility/types";
-import { suggestsHeavyDependence } from "./helpers";
+import { suggestsHeavyDependence, suggestsLightDependence } from "./helpers";
 
 function evaluateMaPrimeAdapt(ctx: EvalContext): AidVerdict {
   const { age, profile } = ctx;
@@ -27,7 +27,7 @@ function evaluateMaPrimeAdapt(ctx: EvalContext): AidVerdict {
 
   const ageOk =
     age >= MAPRIMEADAPT.ageSansConditionAutonomie ||
-    (age >= MAPRIMEADAPT.ageMinAvecGir && suggestsHeavyDependence(profile)) ||
+    (age >= MAPRIMEADAPT.ageMinAvecGir && (suggestsHeavyDependence(profile) || suggestsLightDependence(profile))) ||
     !!profile.disability;
 
   if (!ageOk) {
@@ -48,12 +48,11 @@ function evaluateMaPrimeAdapt(ctx: EvalContext): AidVerdict {
   }
 
   const taux = MAPRIMEADAPT.tauxTresModeste;
-  const aideMax = MAPRIMEADAPT.plafondTravaux * taux;
   return {
     status: "eligible",
     explanation: [
       "Vous pouvez adapter votre logement au vieillissement : douche de plain-pied, barres d'appui, monte-escalier, sol antidérapant.",
-      `L'aide couvre jusqu'à ${Math.round(taux * 100)} % des travaux (plafond de ${formatEuros(MAPRIMEADAPT.plafondTravaux)}), soit jusqu'à ${formatEuros(aideMax)} d'aide.`,
+      `L'aide peut couvrir jusqu'à ${Math.round(taux * 100)} % du coût des travaux, dans la limite d'un plafond.`,
     ],
     missingInfo: ["Un accompagnement (AMO) confirmera le montant selon vos travaux et vos ressources."],
   };
@@ -133,31 +132,6 @@ function evaluateMaPrimeRenov(ctx: EvalContext): AidVerdict {
   };
 }
 
-function evaluateActionLogement(ctx: EvalContext): AidVerdict {
-  const { age, profile } = ctx;
-  if (age == null) {
-    return { status: "unknown", explanation: ["Indiquez votre date de naissance."] };
-  }
-  if (profile.housing === "etablissement") {
-    return { status: "not_eligible", explanation: ["Cette aide concerne l'adaptation d'un logement personnel."] };
-  }
-  const eligibleProfil = age >= 70 || suggestsHeavyDependence(profile) || profile.disability === true;
-  if (!eligibleProfil) {
-    return {
-      status: "to_check",
-      explanation: ["Action Logement aide l'adaptation du logement dès 70 ans, ou en cas de perte d'autonomie."],
-    };
-  }
-  return {
-    status: "to_check",
-    explanation: [
-      "Action Logement finance l'adaptation de la salle de bain (douche de plain-pied...) : une subvention, plus un prêt à taux zéro pour le reste.",
-      "Ouvert aux salariés ET aux retraités du privé, sous conditions de ressources, et cumulable avec MaPrimeAdapt'.",
-    ],
-    missingInfo: ["Avez-vous (eu) une carrière dans le privé et des ressources modestes ?"],
-  };
-}
-
 function evaluateFsl(ctx: EvalContext): AidVerdict {
   const { profile } = ctx;
   if (profile.taxStatus === "imposable") {
@@ -191,10 +165,10 @@ export const logementDefinitions: AidDefinition[] = [
         "Une aide mensuelle pour payer votre loyer si vous êtes locataire, ou le tarif d'hébergement en résidence ou en EHPAD.",
       whyOftenMissed:
         "De nombreux locataires retraités, et des résidents d'EHPAD, ignorent qu'ils y ont droit. La demande est à faire à la CAF.",
-      source: { label: "caf.fr : aides au logement", url: "https://www.caf.fr/" },
+      source: { label: "caf.fr : les aides personnelles au logement", url: "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/logement/les-aides-personnelles-au-logement" },
       howToApply: {
         organism: "La CAF (ou la MSA pour le régime agricole), sur caf.fr",
-        url: "https://www.caf.fr/",
+        url: "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/logement/les-aides-personnelles-au-logement",
         sentenceToSay: "Je voudrais faire une demande d'aide au logement.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -219,7 +193,7 @@ export const logementDefinitions: AidDefinition[] = [
         url: "https://france-renov.gouv.fr/aides/maprimeadapt",
         sentenceToSay: "Je voudrais bénéficier de MaPrimeAdapt' pour adapter mon logement.",
       },
-      lastVerifiedAt: "2026-06-04",
+      lastVerifiedAt: "2026-09-10",
     },
     evaluate: evaluateMaPrimeAdapt,
   },
@@ -239,11 +213,11 @@ export const logementDefinitions: AidDefinition[] = [
         "Méconnue et freinée par la récupération sur succession, alors qu'elle évite des situations d'impayés.",
       source: {
         label: "pour-les-personnes-agees.gouv.fr : ASH",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-aide-sociale-a-l-hebergement-ash-en-etablissement",
       },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
-        url: "https://www.pour-les-personnes-agees.gouv.fr/",
+        url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-aide-sociale-a-l-hebergement-ash-en-etablissement",
         sentenceToSay: "Je souhaite demander l'aide sociale à l'hébergement.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -274,28 +248,6 @@ export const logementDefinitions: AidDefinition[] = [
   },
   {
     aid: {
-      id: "action-logement-adaptation",
-      name: "Action Logement, adaptation du logement",
-      shortName: "Action Logement",
-      category: "logement",
-      scope: { level: "national" },
-      authority: "Action Logement",
-      impact: "eleve",
-      valueStatement: "Une subvention (et un prêt à 0%) pour adapter votre salle de bain au vieillissement.",
-      description: "Aide à l'adaptation du logement, ouverte aux salariés comme aux retraités du privé, cumulable avec MaPrimeAdapt'.",
-      whyOftenMissed: "Les retraités ignorent qu'Action Logement reste ouvert aux anciens salariés du privé, pas seulement aux actifs.",
-      source: { label: "actionlogement.fr : logement des seniors", url: "https://www.actionlogement.fr/jusqu-5-000-pour-le-logement-des-seniors" },
-      howToApply: {
-        organism: "Action Logement",
-        url: "https://www.actionlogement.fr/jusqu-5-000-pour-le-logement-des-seniors",
-        sentenceToSay: "Je voudrais l'aide à l'adaptation du logement pour les seniors.",
-      },
-      lastVerifiedAt: "2026-06-04",
-    },
-    evaluate: evaluateActionLogement,
-  },
-  {
-    aid: {
       id: "fsl",
       name: "Fonds de solidarité logement (FSL)",
       shortName: "FSL",
@@ -306,10 +258,10 @@ export const logementDefinitions: AidDefinition[] = [
       valueStatement: "Une aide en cas d'impayé ou de difficulté à payer le loyer, l'énergie ou l'eau.",
       description: "Subvention ou prêt à 0% pour le maintien dans le logement, dès le premier impayé.",
       whyOftenMissed: "Beaucoup ignorent qu'il couvre aussi l'énergie et l'eau, pas seulement le loyer.",
-      source: { label: "service-public.fr : FSL", url: "https://www.service-public.fr/particuliers/vosdroits/F1334" },
+      source: { label: "service-public.gouv.fr : FSL", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334" },
       howToApply: {
         organism: "Le CCAS ou le service social du département",
-        url: "https://www.service-public.fr/particuliers/vosdroits/F1334",
+        url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334",
         sentenceToSay: "J'ai du mal à payer mon logement, puis-je avoir une aide du FSL ?",
       },
       lastVerifiedAt: "2026-06-04",
