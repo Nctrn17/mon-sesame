@@ -1,29 +1,56 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { SeedShape } from "@/components/brand/SeedShape";
+import { SimHeader } from "@/components/wizard/SimHeader";
 import { buildReport } from "@/domain/eligibility/engine";
 import type { AidResult } from "@/domain/eligibility/types";
 import type { Profile } from "@/domain/profile/types";
-import { AidCard } from "./AidCard";
+import { AidDetail } from "./AidDetail";
 import { AnticipationPanel } from "./AnticipationPanel";
 import { LocalAidsSection } from "./LocalAidsSection";
 import { LocalGuichetPanel } from "./LocalGuichetPanel";
-import { PotentialBanner } from "./PotentialBanner";
-import { THEME_ORDER, themeByKey, themeKeyForCategory } from "./themes";
-import { TopPriorities } from "./TopPriorities";
+import { describeProfile } from "./describeProfile";
 
-export function ResultsView({
-  profile,
-  onRestart,
-}: {
+interface Props {
   profile: Profile;
   onRestart: () => void;
-}) {
+  /** Revenir au questionnaire en gardant les réponses. */
+  onEdit: () => void;
+}
+
+export function ResultsView({ profile, onRestart, onEdit }: Props) {
   const report = useMemo(() => buildReport(profile), [profile]);
+  const [selected, setSelected] = useState<AidResult | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastRowId = useRef<string | null>(null);
 
-  // Déplie toutes les sections le temps de l'impression : un <details>
+  // Le focus suit l'écran : titre des résultats à l'arrivée, puis retour sur
+  // la ligne cliquée quand on referme le détail.
+  useEffect(() => {
+    if (selected) return;
+    const id = lastRowId.current;
+    lastRowId.current = null;
+    const row = id
+      ? containerRef.current?.querySelector<HTMLElement>(`[data-aid-id="${id}"]`)
+      : null;
+    (row ?? headingRef.current)?.focus();
+  }, [selected]);
+
+  const eligible = report.results.filter((r) => r.status === "eligible");
+  const toCheck = report.results.filter((r) => r.status === "to_check");
+  const other = report.results.filter(
+    (r) => r.status === "not_eligible" || r.status === "unknown",
+  );
+  const activeIds = useMemo(
+    () => new Set([...eligible, ...toCheck].map((r) => r.aid.id)),
+    [eligible, toCheck],
+  );
+  const showAnticipation = profile.retirement === "bientot" || profile.retirement === "actif";
+
+  // Déplie les aides non retenues le temps de l'impression : un <details>
   // fermé ne s'imprime pas, et le bilan papier doit être complet.
   const printReport = () => {
     const closed = Array.from(
@@ -34,143 +61,268 @@ export function ResultsView({
     for (const d of closed) d.removeAttribute("open");
   };
 
-  useEffect(() => {
-    headingRef.current?.focus();
-  }, []);
+  const open = (r: AidResult, fromRow = false) => {
+    lastRowId.current = fromRow ? r.aid.id : null;
+    setSelected(r);
+    window.scrollTo({ top: 0 });
+  };
 
-  const eligible = report.results.filter((r) => r.status === "eligible");
-  const toCheck = report.results.filter((r) => r.status === "to_check");
-  const other = report.results.filter(
-    (r) => r.status === "not_eligible" || r.status === "unknown",
-  );
+  if (selected) {
+    return <AidDetail result={selected} onBack={() => setSelected(null)} />;
+  }
 
-  // Aides "actives" (à votre portée ou à confirmer), regroupées par thème.
-  const active = useMemo(() => [...eligible, ...toCheck], [eligible, toCheck]);
-
-  const groups = useMemo(
-    () =>
-      THEME_ORDER.map((key) => {
-        const items = active.filter((r) => themeKeyForCategory(r.aid.category) === key);
-        return {
-          theme: themeByKey(key),
-          items,
-          eligibleCount: items.filter((r) => r.status === "eligible").length,
-        };
-      }).filter((g) => g.items.length > 0),
-    [active],
-  );
-
-  const currentActiveIds = useMemo(() => new Set(active.map((r) => r.aid.id)), [active]);
-  const showAnticipation = profile.retirement === "bientot" || profile.retirement === "actif";
-
-  const renderCard = (r: AidResult) => <AidCard key={r.aid.id} result={r} profile={profile} />;
+  if (eligible.length === 0 && toCheck.length === 0) {
+    return <EmptyResults onEdit={onEdit} onRestart={onRestart} headingRef={headingRef} />;
+  }
 
   return (
-    <div ref={containerRef} className="mx-auto w-full max-w-3xl">
-      <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-bold text-foreground outline-none">
-        Voici vos droits possibles
-      </h1>
+    <div ref={containerRef} className="relative flex min-h-full flex-1 flex-col overflow-hidden">
+      <SeedShape
+        className="hidden lg:block"
+        wrapper={{ right: -140, top: -330, width: 900, height: 900 }}
+        shape={{ left: 230, top: 100, width: 440, height: 700 }}
+        rotate={-24}
+        blur={18}
+        opacity={0.55}
+        variant="open"
+        grain2={false}
+        grainOpacity={0.8}
+      />
+      <SeedShape
+        className="lg:hidden"
+        wrapper={{ right: -260, top: -380, width: 520, height: 560 }}
+        shape={{ left: 130, top: 50, width: 270, height: 430 }}
+        rotate={-24}
+        blur={14}
+        opacity={0.55}
+        variant="open"
+        grain2={false}
+      />
+      <SimHeader>
+        <button type="button" onClick={printReport} className="pill pill-white px-5 py-2.5">
+          Imprimer
+        </button>
+        <button type="button" onClick={onRestart} className="pill pill-white hidden px-5 py-2.5 sm:inline-flex">
+          Recommencer
+        </button>
+      </SimHeader>
 
-      <div className="mt-6">
-        <PotentialBanner eligibleCount={eligible.length} toCheckCount={toCheck.length} />
-      </div>
+      <main
+        id="contenu"
+        className="relative grid items-start gap-12 px-[22px] pb-16 pt-6 sm:px-12 sm:pb-24 sm:pt-16 lg:grid-cols-[1fr_320px] lg:gap-[72px] mx-auto w-full max-w-[1200px]"
+      >
+        <div>
+          <p className="text-[15px] text-muted sm:text-base">D&apos;après vos réponses</p>
+          <h1
+            ref={headingRef}
+            tabIndex={-1}
+            className="mt-2.5 font-serif text-[40px] leading-[1.02] tracking-[-0.02em] outline-none sm:mt-4 sm:text-[64px]"
+          >
+            Voici ce qui
+            <br />
+            vous concerne.
+          </h1>
+          <p className="mt-3 max-w-[600px] text-base leading-[1.5] text-muted sm:mt-5 sm:text-[19px] sm:leading-[1.55]">
+            Ce sont des estimations, pas une décision : chaque organisme tranche. Aucune de ces
+            aides n&apos;est attribuée sans demande.
+          </p>
+          <p className="hidden print:block mt-2 text-base text-muted">
+            Bilan Mon sésame du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
+          </p>
 
-      <p className="hidden print:block mt-2 text-muted">
-        Bilan Mon sésame du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
-      </p>
+          {eligible.length > 0 ? (
+            <AidList
+              title="À demander"
+              dot="dot-warm"
+              items={eligible}
+              verb="À demander à"
+              onOpen={open}
+              className="mt-8 sm:mt-14"
+            />
+          ) : null}
 
-      <p className="mt-4 text-muted">
-        Ces résultats sont des <strong>estimations</strong>, pas un accord. C&apos;est chaque
-        organisme qui décide. Pour chaque aide, on vous indique le bon endroit où la demander.
-      </p>
+          {toCheck.length > 0 ? (
+            <AidList
+              title="À vérifier avec quelqu'un"
+              dot="dot-check"
+              items={toCheck}
+              verb="À voir avec"
+              onOpen={open}
+              className="mt-7 sm:mt-12"
+            />
+          ) : null}
 
-      <LocalGuichetPanel commune={profile.commune} />
+          <LocalAidsSection commune={profile.commune} />
 
-      <TopPriorities items={eligible.slice(0, 3)} />
-
-      {groups.length > 0 ? (
-        <section className="mt-10">
-          <h2 className="text-2xl font-bold text-foreground">Le détail par thème</h2>
-          <p className="mt-1 text-muted">Dépliez les thèmes qui vous intéressent.</p>
-          <div className="mt-4 space-y-3">
-            {groups.map((g) => (
-              <details
-                key={g.theme.key}
-                open={g.eligibleCount > 0}
-                className="group rounded-2xl border-2 border-border bg-card"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
-                  <h3 className="text-xl font-semibold text-foreground">
-                    <span aria-hidden className="mr-2">
-                      {g.theme.icon}
-                    </span>
-                    {g.theme.label}
-                    <span className="ml-2 text-base font-normal text-muted">
-                      ({g.eligibleCount > 0 ? `${g.eligibleCount} à votre portée, ` : ""}
-                      {g.items.length} au total)
-                    </span>
-                  </h3>
-                  <span
-                    aria-hidden
-                    className="shrink-0 text-base font-medium text-brand-dark underline print:hidden"
-                  >
-                    <span className="group-open:hidden">Afficher ▾</span>
-                    <span className="hidden group-open:inline">Masquer ▴</span>
-                  </span>
-                </summary>
-                <div className="space-y-4 px-5 pb-5">{g.items.map(renderCard)}</div>
-              </details>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {showAnticipation ? (
-        <div className="print:hidden">
-          <AnticipationPanel profile={profile} currentActiveIds={currentActiveIds} />
+          {other.length > 0 ? (
+            <details className="group mt-7 print:mt-12">
+              <summary className="link-sienna inline-block cursor-pointer list-none text-[17px] text-foreground [&::-webkit-details-marker]:hidden print:hidden">
+                Voir les aides qui ne vous concernent pas
+                <span aria-hidden className="ml-1.5 inline-block transition group-open:rotate-90">
+                  ›
+                </span>
+              </summary>
+              <AidList
+                title="Ne vous concernent pas a priori"
+                dot="dot-off"
+                items={other}
+                onOpen={open}
+                className="mt-6"
+                headingLevel="h2"
+              />
+            </details>
+          ) : null}
         </div>
-      ) : null}
 
-      <LocalAidsSection commune={profile.commune} />
+        <aside className="flex flex-col gap-5 lg:sticky lg:top-6">
+          <div className="rounded-[18px] border border-border bg-surface p-[26px]">
+            <p className="text-[15px] text-muted">Votre situation</p>
+            <p className="mt-2.5 text-[17px] leading-[1.6]">{describeProfile(profile)}</p>
+            <button
+              type="button"
+              onClick={onEdit}
+              className="link-sienna print:hidden mt-3 text-base text-foreground"
+            >
+              Modifier une réponse
+            </button>
+          </div>
+          <LocalGuichetPanel commune={profile.commune} />
+          {showAnticipation ? (
+            <AnticipationPanel profile={profile} currentActiveIds={activeIds} />
+          ) : null}
+          <p className="px-1.5 text-base leading-[1.6] text-muted">
+            Gardez ces résultats : imprimez-les ou faites-les lire à un proche. Rien n&apos;est
+            enregistré ici.
+          </p>
+          <button
+            type="button"
+            onClick={onRestart}
+            className="pill pill-white print:hidden self-start px-5 py-2.5 text-base sm:hidden"
+          >
+            Recommencer
+          </button>
+        </aside>
+      </main>
+    </div>
+  );
+}
 
-      {other.length > 0 ? (
-        <details className="group print:hidden mt-10 rounded-2xl border border-border bg-card p-5">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-medium text-foreground [&::-webkit-details-marker]:hidden">
-            <span>Aides non retenues pour votre profil ({other.length})</span>
-            <span aria-hidden className="shrink-0 text-base font-medium text-brand-dark underline">
-              <span className="group-open:hidden">Afficher ▾</span>
-              <span className="hidden group-open:inline">Masquer ▴</span>
-            </span>
-          </summary>
-          <div className="mt-4 space-y-4">{other.map(renderCard)}</div>
-        </details>
-      ) : null}
+function AidList({
+  title,
+  dot,
+  items,
+  verb,
+  onOpen,
+  className,
+  headingLevel = "h2",
+}: {
+  title: string;
+  dot: string;
+  items: readonly AidResult[];
+  verb?: string;
+  onOpen: (r: AidResult, fromRow: boolean) => void;
+  className?: string;
+  headingLevel?: "h2" | "h3";
+}) {
+  const Heading = headingLevel;
+  return (
+    <section className={className}>
+      <Heading className="flex items-center gap-2.5 text-lg font-medium sm:gap-3 sm:text-[22px]">
+        <span aria-hidden className={`dot ${dot}`} />
+        {title}
+      </Heading>
+      <ul className="mt-2 flex flex-col sm:mt-4">
+        {items.map((r, i) => (
+          <li
+            key={r.aid.id}
+            className={`border-t border-border ${i === items.length - 1 ? "border-b" : ""}`}
+          >
+            <button
+              type="button"
+              data-aid-id={r.aid.id}
+              onClick={() => onOpen(r, true)}
+              aria-label={`${r.aid.name} : voir le détail`}
+              className="-mx-3 grid w-[calc(100%+24px)] grid-cols-[1fr_auto] items-center gap-3 rounded-lg px-3 py-4 text-left transition hover:bg-hover sm:gap-6 sm:py-[26px]"
+            >
+              <span>
+                <span className="block font-serif text-[22px] leading-tight tracking-[-0.01em] text-foreground sm:text-[28px]">
+                  {r.aid.name}
+                </span>
+                <span className="mt-1 block text-[15px] leading-[1.5] text-muted sm:mt-1.5 sm:text-[17px]">
+                  <span className="hidden sm:inline">{r.aid.valueStatement} </span>
+                  {verb ? (
+                    <>
+                      {verb} : {r.aid.howToApply.organism}.
+                    </>
+                  ) : null}
+                </span>
+              </span>
+              <span aria-hidden className="text-xl text-muted sm:text-[22px]">
+                ›
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
 
-      <aside className="print:hidden mt-10 rounded-2xl border-2 border-brand bg-brand-light p-6">
-        <h2 className="text-xl font-semibold text-brand-dark">Gardez ces résultats près de vous</h2>
-        <p className="mt-2 text-foreground">
-          Bientôt : créez un compte (facultatif) pour sauvegarder votre bilan et être prévenu(e)
-          quand un nouveau droit s&apos;ouvre (départ à la retraite, anniversaire, changement de
-          situation). En attendant, vous pouvez imprimer cette page.
+function EmptyResults({
+  onEdit,
+  onRestart,
+  headingRef,
+}: {
+  onEdit: () => void;
+  onRestart: () => void;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+}) {
+  return (
+    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden">
+      <SeedShape
+        className="hidden lg:block"
+        wrapper={{ right: -140, top: -330, width: 900, height: 900 }}
+        shape={{ left: 230, top: 100, width: 440, height: 700 }}
+        rotate={-24}
+        blur={22}
+        opacity={0.35}
+        grain2={false}
+        grainOpacity={0}
+      />
+      <SimHeader>
+        <button type="button" onClick={onRestart} className="pill pill-white px-5 py-2.5">
+          Recommencer
+        </button>
+      </SimHeader>
+      <main id="contenu" className="relative mx-auto w-full max-w-[1200px] px-[22px] pb-16 pt-6 sm:px-12 sm:pb-24 sm:pt-16">
+        <div className="max-w-[760px]">
+        <p className="text-base text-muted">D&apos;après vos réponses</p>
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="mt-4 font-serif text-[40px] leading-[1.05] tracking-[-0.02em] outline-none sm:text-[60px]"
+        >
+          Aucune aide ne ressort pour l&apos;instant.
+        </h1>
+        <p className="mt-5 text-lg leading-[1.55] text-body sm:text-xl">
+          Cela peut changer : au départ à la retraite, quand les revenus baissent, ou après un
+          changement de situation. Beaucoup d&apos;aides s&apos;ouvrent à ce moment-là.
         </p>
-        <button
-          type="button"
-          onClick={printReport}
-          className="mt-4 rounded-lg border-2 border-brand px-5 py-2.5 font-semibold text-brand-dark transition hover:bg-brand hover:text-white active:translate-y-px"
-        >
-          Imprimer mon bilan
-        </button>
-      </aside>
-
-      <div className="print:hidden mt-10">
-        <button
-          type="button"
-          onClick={onRestart}
-          className="rounded-lg border-2 border-border px-6 py-3 text-lg font-medium text-foreground transition hover:border-brand active:translate-y-px"
-        >
-          Recommencer le questionnaire
-        </button>
-      </div>
+        <div className="mt-9 flex flex-wrap gap-3.5">
+          <button type="button" onClick={onEdit} className="pill pill-honey px-7 py-4 text-lg">
+            Revoir mes réponses
+          </button>
+          <Link href="/simulateur?pour=proche" className="pill pill-white px-7 py-4 text-lg">
+            Faire le point pour un proche
+          </Link>
+        </div>
+        <p className="mt-10 max-w-[600px] text-[17px] leading-[1.6] text-muted">
+          Si votre situation est particulière (handicap, veuvage récent, difficultés à payer une
+          facture), un conseiller France Services ou le CCAS de votre mairie peut regarder avec
+          vous, gratuitement.
+        </p>
+        </div>
+      </main>
     </div>
   );
 }

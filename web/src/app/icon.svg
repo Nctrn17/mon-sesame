@@ -1,8 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="12" fill="#a34a24"/>
-  <g transform="translate(32 33) scale(1.15) translate(-32 -33)">
-    <path d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z" fill="#fdfbf7"/>
-    <path d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z" fill="#f0c8ae" transform="rotate(-42 32 50)"/>
-    <path d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z" fill="#f0c8ae" transform="rotate(42 32 50)"/>
-  </g>
+  <defs>
+    <linearGradient id="g" x1="0.15" y1="0" x2="0.85" y2="1">
+      <stop offset="0" stop-color="#f3e7b0"/>
+      <stop offset="0.34" stop-color="#dcae4a"/>
+      <stop offset="0.66" stop-color="#b85c2f"/>
+      <stop offset="1" stop-color="#4b2b3f"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="12" fill="#fbf9f4"/>
+  <path transform="translate(32 32) rotate(-34) translate(-13 -20.5)" d="M13 0 C20.3 10.3,26 20.5,26 28.7 C26 36.1,20.3 41,13 41 C5.7 41,0 36.1,0 28.7 C0 20.5,5.7 10.3,13 0 Z" fill="url(#g)"/>
 </svg>

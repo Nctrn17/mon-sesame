@@ -1,33 +1,32 @@
 import Link from "next/link";
+import { Logo } from "@/components/brand/Logo";
 
-export function SiteHeader() {
+/**
+ * En-tête des pages éditoriales (accueil, pages légales).
+ * Sur mobile, la navigation se réduit au bouton « Commencer ».
+ */
+export function SiteHeader({ current }: { current?: "accessibilite" }) {
   return (
-    <header className="print:hidden border-b border-border bg-background">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-4 py-2">
-        <Link href="/" className="flex items-center gap-2 py-2 text-xl font-bold text-brand-dark">
-          {/* Marque : mêmes feuilles de sésame que l'icône du site. */}
-          <svg viewBox="0 0 64 64" aria-hidden className="h-8 w-8">
-            <path d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z" fill="var(--brand)" />
-            <path
-              d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z"
-              fill="#c97b52"
-              transform="rotate(-42 32 50)"
-            />
-            <path
-              d="M32 14 C39 24 40 38 32 47 C24 38 25 24 32 14 Z"
-              fill="#c97b52"
-              transform="rotate(42 32 50)"
-            />
-          </svg>
-          <span>Mon sésame</span>
+    <header className="print:hidden relative z-[2] flex items-center justify-between gap-4 px-[22px] py-4 sm:px-12 sm:py-6 mx-auto w-full max-w-[1200px]">
+      <Logo />
+      <nav aria-label="Navigation principale" className="flex items-center gap-4 text-[17px] text-muted sm:gap-8">
+        <Link href="/#comment-ca-marche" className="hidden hover:text-foreground lg:inline">
+          Comment ça marche
+        </Link>
+        <Link href="/simulateur?pour=proche" className="hidden hover:text-foreground lg:inline">
+          Pour un proche
         </Link>
         <Link
-          href="/simulateur"
-          className="rounded-lg bg-brand px-4 py-2 font-semibold text-white transition hover:bg-brand-dark active:translate-y-px"
+          href="/accessibilite"
+          aria-current={current === "accessibilite" ? "page" : undefined}
+          className={`hidden hover:text-foreground lg:inline ${current === "accessibilite" ? "text-foreground" : ""}`}
         >
-          Découvrir mes droits
+          Accessibilité
         </Link>
-      </div>
+        <Link href="/simulateur" className="pill pill-honey px-5 py-3 text-[17px]">
+          Commencer
+        </Link>
+      </nav>
     </header>
   );
 }

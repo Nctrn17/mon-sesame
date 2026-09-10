@@ -9,6 +9,7 @@ interface Props {
   readonly onSelect: (commune: Commune) => void;
   /** Id d'un élément (ex. le titre de la question) servant de label au champ. */
   readonly labelledById?: string;
+  readonly inputClassName?: string;
 }
 
 function label(c: Commune): string {
@@ -16,7 +17,7 @@ function label(c: Commune): string {
   return `${cp}${c.nom} (${c.codeDepartement})`;
 }
 
-export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props) {
+export function CommuneAutocomplete({ selected, onSelect, labelledById, inputClassName }: Props) {
   const [query, setQuery] = useState(selected ? label(selected) : "");
   const [results, setResults] = useState<Commune[]>([]);
   const [open, setOpen] = useState(false);
@@ -104,7 +105,7 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
   const activeDescendant = activeIndex >= 0 ? `${listId}-option-${activeIndex}` : undefined;
 
   return (
-    <div className="relative mt-6">
+    <div className="relative">
       <input
         ref={inputRef}
         type="text"
@@ -124,7 +125,10 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
           // Délai pour laisser le clic sur une option aboutir avant de fermer.
           setTimeout(() => setOpen(false), 150);
         }}
-        className="w-full rounded-xl border-2 border-border bg-card p-4 text-lg focus-visible:border-brand"
+        className={
+          inputClassName ??
+          "w-full rounded-[14px] border-[1.5px] border-border bg-surface px-6 py-[22px] text-xl focus-visible:border-foreground"
+        }
       />
 
       {/* Annonce du nombre de résultats aux lecteurs d'écran (toujours dans le DOM) */}
@@ -141,7 +145,7 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
         </p>
       ) : null}
       {error ? (
-        <p role="alert" className="mt-2 text-warn">
+        <p role="alert" className="mt-2 font-medium text-warn">
           {error}
         </p>
       ) : null}
@@ -150,7 +154,7 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
         <ul
           id={listId}
           role="listbox"
-          className="absolute z-10 mt-2 max-h-72 w-full overflow-auto rounded-xl border-2 border-border bg-card shadow-lg"
+          className="absolute z-10 mt-2 max-h-72 w-full overflow-auto rounded-[14px] border border-border bg-surface shadow-[0_20px_40px_rgba(0,0,0,0.12)]"
         >
           {results.map((c, i) => (
             <li
@@ -161,8 +165,8 @@ export function CommuneAutocomplete({ selected, onSelect, labelledById }: Props)
               tabIndex={-1}
               onClick={() => choose(c)}
               onMouseEnter={() => setActiveIndex(i)}
-              className={`cursor-pointer px-4 py-3 text-lg ${
-                i === activeIndex ? "bg-brand-light" : "hover:bg-brand-light"
+              className={`cursor-pointer px-5 py-3.5 text-lg ${
+                i === activeIndex ? "bg-hover" : "hover:bg-hover"
               }`}
             >
               {label(c)}

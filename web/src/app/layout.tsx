@@ -1,27 +1,32 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible } from "next/font/google";
-import { SiteFooter } from "@/components/layout/SiteFooter";
-import { SiteHeader } from "@/components/layout/SiteHeader";
+import { Geist, Instrument_Serif } from "next/font/google";
 import { SITE_URL } from "./site";
 import "./globals.css";
 
-/* Police dessinée pour la basse vision (Braille Institute) :
-   formes de lettres non ambiguës, adaptée au public senior. */
-const atkinson = Atkinson_Hyperlegible({
-  variable: "--font-atkinson",
-  weight: ["400", "700"],
+/* Instrument Serif pour les titres, les noms d'aides et les citations ;
+   Geist pour tout le reste. Auto-hébergées par next/font (aucune requête externe). */
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+});
+
+const geist = Geist({
+  variable: "--font-geist",
+  weight: ["400", "500"],
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Mon sésame : vos aides de retraité, sans rien laisser passer",
+  title: "Mon sésame : le mot qui ouvre vos aides de retraité",
   description:
-    "Découvrez en quelques minutes les aides, exonérations et tarifs réduits auxquels vous avez droit. Service gratuit, sans inscription obligatoire.",
+    "Pour chaque aide, il existe un mot qui ouvre la porte : son nom exact, le bon organisme, la phrase à dire. Répondez à quelques questions, nous vous le donnons. Gratuit, sans inscription.",
   openGraph: {
-    title: "Mon sésame : vos aides de retraité, sans rien laisser passer",
+    title: "Mon sésame : le mot qui ouvre vos aides de retraité",
     description:
-      "Répondez à une douzaine de questions simples et découvrez les aides auxquelles vous avez droit. Gratuit, anonyme, sans inscription.",
+      "Répondez à quelques questions et repartez avec, pour chaque aide, le nom exact, l'organisme et la phrase à dire. Gratuit, sans inscription.",
     url: SITE_URL,
     siteName: "Mon sésame",
     locale: "fr_FR",
@@ -35,19 +40,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${atkinson.variable} h-full antialiased`}>
+    <html lang="fr" className={`${instrumentSerif.variable} ${geist.variable} h-full`}>
       <body className="bg-background text-foreground flex min-h-full flex-col">
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:rounded-full focus:bg-honey focus:px-4 focus:py-2 focus:text-foreground"
         >
           Aller au contenu principal
         </a>
-        <SiteHeader />
-        <main id="contenu" className="flex-1">
-          {children}
-        </main>
-        <SiteFooter />
+        {children}
       </body>
     </html>
   );

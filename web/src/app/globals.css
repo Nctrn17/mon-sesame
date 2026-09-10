@@ -1,85 +1,197 @@
 @import "tailwindcss";
 
 /*
-  Mon sésame : design pensé pour un public senior.
-  Priorités accessibilité (cible RGAA / WCAG 2.1 AA) :
-  - taille de texte de base confortable (18px),
-  - contrastes élevés,
-  - focus toujours visible,
-  - respect de prefers-reduced-motion.
+  Mon sésame : direction « La graine ».
+  Public senior : base 17px, contrastes AA, focus visible, animations
+  respectant prefers-reduced-motion. Aucun chiffre, aucune promesse de montant.
 */
 
 :root {
-  /* Direction "chaleur humaine" : le ton d'une association proche,
-     pas d'une administration. Fond crème, sable, terracotta, olive. */
-  --background: #fdfbf7;
-  --foreground: #2b2118;
-
-  /* Terracotta : couleur principale (contraste 5.9:1 avec le blanc,
-     utilisable en texte large et en fond de bouton avec texte blanc) */
-  --brand: #a34a24;
-  --brand-dark: #7f3618;
-  --brand-light: #f8e9e1;
-
-  /* Olive "argent retrouvé" pour les montants positifs (contraste AA) */
-  --money: #556337;
-  --money-light: #eef2e3;
-
-  /* Ambre pour "à vérifier" (contraste AA, y compris petit texte) */
+  --background: #fbf9f4; /* papier */
+  --foreground: #1f1c17; /* encre */
+  --body: #3d3730; /* texte courant */
+  --muted: #5c554b; /* secondaire, 4.5:1 sur papier */
+  --border: #e6e0d4;
+  --surface: #ffffff; /* cartes */
+  --hover: #f3ecdd;
+  --dot-off: #d8d0bf; /* point « à venir » */
+  --dot-check: #8f8778; /* point « à vérifier » */
+  --honey: #dcae4a; /* bouton principal, texte encre */
+  --honey-dark: #c99a3c;
+  --sienna: #b85c2f; /* soulignés, tirets, chiffres */
+  --plum: #2e1c27; /* bande sombre, carte « le mot qui ouvre » */
+  --plum-text: #d9cbd2;
   --warn: #7a5200;
   --warn-light: #fdf3da;
 
-  /* Gris chaud assombri pour atteindre 4.5:1 sur le fond crème et le sable */
-  --muted: #5f5548;
-  --border: #ded3c0;
-  --card: #f5efe3;
+  --seed-gradient: linear-gradient(170deg, #f3e7b0 0%, #dcae4a 34%, #b85c2f 66%, #4b2b3f 100%);
+  --dot-gradient: linear-gradient(165deg, #f3e7b0 0%, #dcae4a 40%, #b85c2f 75%, #4b2b3f 100%);
+  --dot-gradient-warm: linear-gradient(165deg, #dcae4a, #b85c2f 60%, #4b2b3f);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand: var(--brand);
-  --color-brand-dark: var(--brand-dark);
-  --color-brand-light: var(--brand-light);
-  --color-money: var(--money);
-  --color-money-light: var(--money-light);
-  --color-warn: var(--warn);
-  --color-warn-light: var(--warn-light);
+  --color-body: var(--body);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  --color-card: var(--card);
-  --font-sans: var(--font-atkinson), system-ui, sans-serif;
+  --color-surface: var(--surface);
+  --color-hover: var(--hover);
+  --color-dot-off: var(--dot-off);
+  --color-dot-check: var(--dot-check);
+  --color-honey: var(--honey);
+  --color-honey-dark: var(--honey-dark);
+  --color-sienna: var(--sienna);
+  --color-plum: var(--plum);
+  --color-plum-text: var(--plum-text);
+  --color-warn: var(--warn);
+  --color-warn-light: var(--warn-light);
+  --font-sans: var(--font-geist), "Instrument Sans", system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
 }
 
 html {
-  font-size: 18px;
+  font-size: 17px;
 }
 
 body {
   font-family: var(--font-sans);
-  line-height: 1.6;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
-/* Titres équilibrés (pas de mot orphelin), chasse resserrée pour la présence. */
 h1,
 h2,
 h3 {
   text-wrap: balance;
-  letter-spacing: -0.01em;
 }
 
 p {
   text-wrap: pretty;
 }
 
-/* Focus visible renforcé pour la navigation clavier.
-   L'offset de 3px place le contour en dehors de l'élément, donc visible
-   même sur les boutons à fond bleu (le contour se dessine sur le fond clair). */
+/* Focus visible renforcé pour la navigation clavier, contour hors de l'élément. */
 :focus-visible {
-  outline: 3px solid var(--brand);
+  outline: 3px solid var(--sienna);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* Point de marque : 12px, dégradé graine. */
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--dot-gradient);
+}
+.dot-warm {
+  background: var(--dot-gradient-warm);
+}
+.dot-off {
+  background: var(--dot-off);
+}
+.dot-check {
+  background: var(--dot-check);
+}
+
+/* Boutons pilules. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease;
+}
+.pill:active {
+  transform: translateY(1px);
+}
+.pill-honey {
+  background: var(--honey);
+  color: var(--foreground);
+}
+.pill-honey:hover {
+  background: var(--honey-dark);
+}
+.pill-white {
+  background: var(--surface);
+  color: var(--foreground);
+  border: 1.5px solid var(--border);
+}
+.pill-white:hover {
+  border-color: var(--foreground);
+}
+.pill-ink {
+  background: var(--foreground);
+  color: var(--background);
+}
+.pill-ink:hover {
+  background: #3d3730;
+}
+
+/* Lien souligné sienne. */
+.link-sienna {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--sienna);
+}
+
+/* Graine : animations. */
+@keyframes ms-drift {
+  0% {
+    transform: rotate(-34deg) translate(0, 0);
+  }
+  50% {
+    transform: rotate(-31deg) translate(-18px, 22px);
+  }
+  100% {
+    transform: rotate(-34deg) translate(0, 0);
+  }
+}
+@keyframes ms-open-l {
+  from {
+    transform: translate(0, 0) rotate(0);
+  }
+  to {
+    transform: translate(-110px, 14px) rotate(-7deg);
+  }
+}
+@keyframes ms-open-r {
+  from {
+    transform: translate(0, 0) rotate(0);
+  }
+  to {
+    transform: translate(110px, -14px) rotate(7deg);
+  }
+}
+@keyframes ms-glow {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.seed-drift {
+  animation: ms-drift 18s ease-in-out infinite;
+}
+.seed-open-l {
+  animation: ms-open-l 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s both;
+}
+.seed-open-r {
+  animation: ms-open-r 2.6s cubic-bezier(0.2, 0.7, 0.2, 1) 0.6s both;
+}
+.seed-glow {
+  animation: ms-glow 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) 0.9s both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -89,5 +201,11 @@ p {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .seed-wrapper {
+    display: none !important;
   }
 }

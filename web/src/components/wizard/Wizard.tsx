@@ -1,11 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { SeedShape } from "@/components/brand/SeedShape";
 import { ResultsView } from "@/components/results/ResultsView";
 import { type Question, resolveText, visibleQuestions } from "@/domain/profile/questions";
 import { EMPTY_PROFILE, type Profile, updateProfile } from "@/domain/profile/types";
 import { ChoiceField } from "./ChoiceField";
 import { CommuneAutocomplete } from "./CommuneAutocomplete";
+import { SimHeader } from "./SimHeader";
 
 function isAnswered(question: Question, profile: Profile): boolean {
   switch (question.kind) {
@@ -18,8 +21,11 @@ function isAnswered(question: Question, profile: Profile): boolean {
   }
 }
 
-export function Wizard() {
-  const [profile, setProfile] = useState<Profile>(EMPTY_PROFILE);
+const FIELD_CLASS =
+  "mt-6 w-full rounded-[14px] border-[1.5px] border-border bg-surface px-[18px] py-[18px] text-lg text-foreground focus-visible:border-foreground sm:mt-9 sm:px-6 sm:py-[22px] sm:text-xl";
+
+export function Wizard({ initialProfile = EMPTY_PROFILE }: { initialProfile?: Profile }) {
+  const [profile, setProfile] = useState<Profile>(initialProfile);
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   // Message affiché si la personne clique sur Continuer sans avoir répondu.
@@ -39,7 +45,7 @@ export function Wizard() {
       return;
     }
     questionRef.current?.focus();
-  }, [step]);
+  }, [step, done]);
 
   if (done) {
     return (
@@ -47,6 +53,10 @@ export function Wizard() {
         profile={profile}
         onRestart={() => {
           setProfile(EMPTY_PROFILE);
+          setStep(0);
+          setDone(false);
+        }}
+        onEdit={() => {
           setStep(0);
           setDone(false);
         }}
@@ -67,6 +77,7 @@ export function Wizard() {
   const titleId = `question-title-${question.id}`;
   const title = resolveText(question.title, profile);
   const help = question.help ? resolveText(question.help, profile) : undefined;
+  const why = question.why ? resolveText(question.why, profile) : undefined;
 
   function answer(next: Profile) {
     setProfile(next);
@@ -88,111 +99,159 @@ export function Wizard() {
     setStep(Math.max(0, index - 1));
   }
 
+  const titleClass =
+    "font-serif text-[36px] leading-[1.1] tracking-[-0.02em] text-foreground sm:text-[52px] sm:leading-[1.08]";
+  const helpClass = "mt-3 text-[17px] leading-[1.5] text-muted sm:mt-4 sm:text-[19px]";
+
   return (
-    <div className="mx-auto w-full max-w-2xl">
-      <div className="mb-2 flex items-center justify-between text-muted">
-        <span>
-          Question {index + 1} sur {total}
-        </span>
-        <span>{Math.round(((index + 1) / total) * 100)} %</span>
-      </div>
-      <div
-        className="h-2 w-full overflow-hidden rounded-full bg-border"
-        role="progressbar"
-        aria-valuenow={index + 1}
-        aria-valuemin={0}
-        aria-valuemax={total}
-        aria-valuetext={`Question ${index + 1} sur ${total}`}
-        aria-label="Progression du questionnaire"
+    <div className="relative flex min-h-full flex-1 flex-col overflow-hidden">
+      <SeedShape
+        className="hidden lg:block"
+        wrapper={{ right: -120, bottom: -320, width: 760, height: 760 }}
+        shape={{ left: 190, top: 60, width: 400, height: 640 }}
+        rotate={-34}
+        blur={20}
+        opacity={0.9}
+      />
+      <SeedShape
+        className="lg:hidden"
+        wrapper={{ right: -220, bottom: -260, width: 520, height: 560 }}
+        shape={{ left: 130, top: 50, width: 270, height: 430 }}
+        rotate={-34}
+        blur={14}
+        opacity={0.6}
+        grain2={false}
+      />
+      <SimHeader>
+        <Link href="/" className="text-[17px] text-muted underline underline-offset-4 hover:text-foreground">
+          Quitter
+        </Link>
+      </SimHeader>
+
+      <main
+        id="contenu"
+        className="relative mx-auto flex w-full max-w-[720px] flex-1 flex-col px-[22px] pb-7 pt-6 sm:px-10 sm:pb-24 sm:pt-14"
       >
+        {/* Progression : un point par question, pas de barre ni de pourcentage. */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+          <div
+            role="progressbar"
+            aria-valuenow={index + 1}
+            aria-valuemin={1}
+            aria-valuemax={total}
+            aria-valuetext={`Question ${index + 1} sur ${total}`}
+            aria-label="Progression du questionnaire"
+            className="flex flex-wrap items-center gap-1.5 sm:gap-2"
+          >
+            {Array.from({ length: total }, (_, i) => (
+              <span key={i} className={`dot ${i <= index ? "dot-warm" : "dot-off"}`} />
+            ))}
+          </div>
+          <span className="ml-2 text-[15px] text-muted sm:ml-2.5 sm:text-base">
+            <span className="hidden sm:inline">Question </span>
+            {index + 1} sur {total}
+          </span>
+        </div>
+
         <div
-          className="h-full rounded-full bg-brand transition-all"
-          style={{ width: `${((index + 1) / total) * 100}%` }}
-        />
-      </div>
-      <p className="mt-2 text-base text-muted">
-        Anonyme et sans inscription : vos réponses ne sont pas conservées.
-      </p>
-
-      <div
-        key={question.id}
-        ref={questionRef}
-        tabIndex={-1}
-        aria-labelledby={titleId}
-        className="mt-10 outline-none"
-      >
-        {question.kind === "choice" ? (
-          <ChoiceField
-            legend={title}
-            legendId={titleId}
-            help={help}
-            name={question.id}
-            options={question.options}
-            value={question.get(profile)}
-            onChange={(v) => answer(question.set(profile, v))}
-          />
-        ) : null}
-
-        {question.kind === "date" ? (
-          <div>
-            <h2 id={titleId} className="text-2xl font-semibold text-foreground">
-              {title}
-            </h2>
-            {help ? <p className="mt-2 text-[1.05rem] text-muted">{help}</p> : null}
-            <input
-              type="date"
-              max={today}
-              min="1900-01-01"
-              value={question.get(profile) ?? ""}
-              onChange={(e) => answer(question.set(profile, e.target.value))}
-              aria-labelledby={titleId}
-              aria-describedby={`${question.id}-format`}
-              className="mt-6 w-full rounded-xl border-2 border-border bg-card p-4 text-lg focus-visible:border-brand"
-            />
-            <p id={`${question.id}-format`} className="mt-2 text-base text-muted">
-              Indiquez le jour, le mois puis l&apos;année. Par exemple : 05/12/1948.
-            </p>
-          </div>
-        ) : null}
-
-        {question.kind === "commune" ? (
-          <div>
-            <h2 id={titleId} className="text-2xl font-semibold text-foreground">
-              {title}
-            </h2>
-            {help ? <p className="mt-2 text-[1.05rem] text-muted">{help}</p> : null}
-            <CommuneAutocomplete
-              selected={profile.commune}
-              onSelect={(commune) => answer(updateProfile(profile, { commune }))}
-              labelledById={titleId}
-            />
-          </div>
-        ) : null}
-      </div>
-
-      {showAnswerHint ? (
-        <p role="alert" className="mt-8 rounded-xl bg-warn-light p-4 text-lg font-medium text-warn">
-          Choisissez une réponse pour continuer.
-        </p>
-      ) : null}
-
-      <nav className={`${showAnswerHint ? "mt-4" : "mt-12"} flex items-center justify-between gap-4`}>
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={index === 0}
-          className="rounded-lg border-2 border-border px-6 py-3 text-lg font-medium text-foreground transition hover:border-brand active:translate-y-px disabled:opacity-40 disabled:hover:border-border"
+          key={question.id}
+          ref={questionRef}
+          tabIndex={-1}
+          aria-labelledby={titleId}
+          className="mt-6 outline-none sm:mt-8"
         >
-          Précédent
-        </button>
-        <button
-          type="button"
-          onClick={goNext}
-          className="rounded-lg bg-brand px-8 py-3 text-lg font-semibold text-white transition hover:bg-brand-dark active:translate-y-px"
+          {question.kind === "choice" ? (
+            <ChoiceField
+              legend={title}
+              legendId={titleId}
+              help={help}
+              name={question.id}
+              options={question.options}
+              value={question.get(profile)}
+              onChange={(v) => answer(question.set(profile, v))}
+            />
+          ) : null}
+
+          {question.kind === "date" ? (
+            <div>
+              <h1 id={titleId} className={titleClass}>
+                {title}
+              </h1>
+              {help ? <p className={helpClass}>{help}</p> : null}
+              <input
+                type="date"
+                max={today}
+                min="1900-01-01"
+                value={question.get(profile) ?? ""}
+                onChange={(e) => answer(question.set(profile, e.target.value))}
+                aria-labelledby={titleId}
+                aria-describedby={`${question.id}-format`}
+                className={FIELD_CLASS}
+              />
+              <p id={`${question.id}-format`} className="mt-2 text-base text-muted">
+                Indiquez le jour, le mois puis l&apos;année. Par exemple : 05/12/1948.
+              </p>
+            </div>
+          ) : null}
+
+          {question.kind === "commune" ? (
+            <div>
+              <h1 id={titleId} className={titleClass}>
+                {title}
+              </h1>
+              {help ? <p className={helpClass}>{help}</p> : null}
+              <CommuneAutocomplete
+                selected={profile.commune}
+                onSelect={(commune) => answer(updateProfile(profile, { commune }))}
+                labelledById={titleId}
+                inputClassName={FIELD_CLASS}
+              />
+            </div>
+          ) : null}
+        </div>
+
+        {why ? (
+          <details className="group mt-4 sm:mt-6">
+            <summary className="link-sienna inline-block cursor-pointer list-none text-base text-foreground [&::-webkit-details-marker]:hidden sm:text-[17px]">
+              Pourquoi cette question ?
+              <span aria-hidden className="ml-1.5 inline-block transition group-open:rotate-90">
+                ›
+              </span>
+            </summary>
+            <p className="mt-3 max-w-[600px] text-[17px] leading-[1.55] text-muted">{why}</p>
+          </details>
+        ) : null}
+
+        {showAnswerHint ? (
+          <p
+            role="alert"
+            className="mt-6 rounded-[14px] bg-warn-light px-5 py-4 text-lg font-medium text-warn"
+          >
+            Choisissez une réponse pour continuer.
+          </p>
+        ) : null}
+
+        <nav
+          aria-label="Navigation entre les questions"
+          className="mt-auto flex flex-col gap-2.5 pt-7 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:border-t sm:border-border"
         >
-          {index === total - 1 ? "Voir mes droits" : "Continuer"}
-        </button>
-      </nav>
+          <button
+            type="button"
+            onClick={goBack}
+            disabled={index === 0}
+            className="pill pill-white order-2 min-h-[52px] px-6 py-[15px] text-lg disabled:cursor-default disabled:opacity-40 disabled:hover:border-border sm:order-1"
+          >
+            Précédent
+          </button>
+          <button
+            type="button"
+            onClick={goNext}
+            className="pill pill-honey order-1 min-h-[56px] px-8 py-4 text-lg sm:order-2"
+          >
+            {index === total - 1 ? "Voir mes droits" : "Continuer"}
+          </button>
+        </nav>
+      </main>
     </div>
   );
 }
