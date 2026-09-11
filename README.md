@@ -1,12 +1,14 @@
-# Boussole : vos aides de retraité, sans rien laisser passer
+# Mon sésame : vos aides de retraité, sans rien laisser passer
 
-Boussole révèle aux seniors les aides, exonérations et tarifs réduits auxquels
+Mon sésame révèle aux seniors les aides, exonérations et tarifs réduits auxquels
 ils ont droit, adaptés à leur profil. L'objectif : attaquer le **non-recours**
 (environ 10 milliards d'euros d'aides non réclamées chaque année en France).
 
+En ligne : https://monsesame.fr
+
 > Origine du projet : une retraitée a découvert tardivement son droit au forfait
 > Améthyste (transport gratuit dès 60 ans en Île-de-France), après des années de
-> manque à gagner. Personne ne le lui avait jamais dit. Boussole existe pour que
+> manque à gagner. Personne ne le lui avait jamais dit. Mon sésame existe pour que
 > ça n'arrive plus.
 
 ## Ce que fait l'application
@@ -14,7 +16,7 @@ ils ont droit, adaptés à leur profil. L'objectif : attaquer le **non-recours**
 1. Un questionnaire court (une question par écran, langage clair, accessible).
 2. Un moteur d'éligibilité qui croise le profil avec un catalogue d'aides.
 3. Une page de résultats : aides éligibles / à vérifier / non retenues, avec
-   pour chacune un montant estimé, le **manque à gagner annuel agrégé**, le bon
+   pour chacune le bon
    guichet, et la démarche concrète.
 
 ## Architecture (hybride)
@@ -46,6 +48,7 @@ docs/                Architecture et catalogue d'aides
 
 ```bash
 cd web
+cp .env.example .env.local   # variables optionnelles, voir le fichier
 npm install
 npm run dev        # http://localhost:3000
 npm test           # tests de la logique d'éligibilité
@@ -66,3 +69,8 @@ Le service OpenFisca est **optionnel** en développement (voir
 
 Les résultats sont des **estimations non contractuelles**. Seuls les organismes
 compétents décident de l'attribution et du montant des aides.
+
+## Licence
+
+Code publié sous licence [AGPL-3.0](LICENSE). Les textes et barèmes des aides
+proviennent des sources officielles citées dans chaque fiche.
