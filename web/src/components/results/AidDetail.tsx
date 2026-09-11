@@ -1,25 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { AidCategory } from "@/domain/aids/types";
+import { CATEGORY_LABELS } from "@/domain/aids/themes";
 import type { AidResult } from "@/domain/eligibility/types";
 import { SimHeader } from "@/components/wizard/SimHeader";
 
-const CATEGORY_LABELS: Record<AidCategory, string> = {
-  minima: "Revenu",
-  sante: "Santé",
-  autonomie: "Autonomie",
-  logement: "Logement",
-  transport: "Transport",
-  fiscal: "Impôts",
-  energie: "Énergie",
-  caisse_retraite: "Caisse de retraite",
-  veuvage: "Veuvage",
-  handicap: "Handicap",
-  aidant: "Proche aidant",
-  vie_quotidienne: "Vie quotidienne",
-  retraite: "Retraite",
-};
 
 function statusLabel(status: AidResult["status"]): { label: string; dot: string } {
   switch (status) {

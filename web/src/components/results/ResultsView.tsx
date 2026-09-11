@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SeedShape } from "@/components/brand/SeedShape";
 import { SimHeader } from "@/components/wizard/SimHeader";
+import { THEME_LABELS } from "@/domain/aids/themes";
 import { buildReport } from "@/domain/eligibility/engine";
+import { countItems, groupResults, type ThemeGroup } from "@/domain/eligibility/grouping";
 import type { AidResult } from "@/domain/eligibility/types";
 import type { Profile } from "@/domain/profile/types";
 import { AidDetail } from "./AidDetail";
@@ -23,6 +25,9 @@ interface Props {
 export function ResultsView({ profile, onRestart, onEdit }: Props) {
   const report = useMemo(() => buildReport(profile), [profile]);
   const [selected, setSelected] = useState<AidResult | null>(null);
+  // Le bloc « Bon à savoir » est replié par défaut ; on garde son état pour
+  // qu'il ne se referme pas quand on revient d'une fiche.
+  const [goodToKnowOpen, setGoodToKnowOpen] = useState(false);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastRowId = useRef<string | null>(null);
@@ -39,15 +44,19 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
     (row ?? headingRef.current)?.focus();
   }, [selected]);
 
-  const eligible = report.results.filter((r) => r.status === "eligible");
-  const toCheck = report.results.filter((r) => r.status === "to_check");
-  const other = report.results.filter(
-    (r) => r.status === "not_eligible" || r.status === "unknown",
-  );
+  const groups = useMemo(() => groupResults(report.results), [report]);
+  const { toRequest, toCheck, goodToKnow, other } = groups;
   const activeIds = useMemo(
-    () => new Set([...eligible, ...toCheck].map((r) => r.aid.id)),
-    [eligible, toCheck],
+    () =>
+      new Set(
+        report.results
+          .filter((r) => r.status === "eligible" || r.status === "to_check")
+          .map((r) => r.aid.id),
+      ),
+    [report],
   );
+  const mainCount = countItems(toRequest) + countItems(toCheck);
+  const goodToKnowCount = countItems(goodToKnow);
   const showAnticipation = profile.retirement === "bientot" || profile.retirement === "actif";
 
   // Déplie les aides non retenues le temps de l'impression : un <details>
@@ -71,7 +80,7 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
     return <AidDetail result={selected} onBack={() => setSelected(null)} />;
   }
 
-  if (eligible.length === 0 && toCheck.length === 0) {
+  if (mainCount === 0 && goodToKnowCount === 0) {
     return <EmptyResults onEdit={onEdit} onRestart={onRestart} headingRef={headingRef} />;
   }
 
@@ -118,9 +127,19 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
             tabIndex={-1}
             className="mt-2.5 font-serif text-[40px] leading-[1.02] tracking-[-0.02em] outline-none sm:mt-4 sm:text-[64px]"
           >
-            Voici ce qui
-            <br />
-            vous concerne.
+            {mainCount > 0 ? (
+              <>
+                Voici ce qui
+                <br />
+                vous concerne.
+              </>
+            ) : (
+              <>
+                Pas de droit majeur,
+                <br />
+                mais des coups de pouce.
+              </>
+            )}
           </h1>
           <p className="mt-3 max-w-[600px] text-base leading-[1.5] text-muted sm:mt-5 sm:text-[19px] sm:leading-[1.55]">
             Ce sont des estimations, pas une décision : chaque organisme tranche. Aucune de ces
@@ -130,26 +149,52 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
             Bilan Mon sésame du {new Date(report.generatedAt).toLocaleDateString("fr-FR")}.
           </p>
 
-          {eligible.length > 0 ? (
-            <AidList
+          {countItems(toRequest) > 0 ? (
+            <ThemedBlock
               title="À demander"
               dot="dot-warm"
-              items={eligible}
+              groups={toRequest}
               verb="À demander à"
               onOpen={open}
               className="mt-8 sm:mt-14"
             />
           ) : null}
 
-          {toCheck.length > 0 ? (
-            <AidList
+          {countItems(toCheck) > 0 ? (
+            <ThemedBlock
               title="À vérifier avec quelqu'un"
               dot="dot-check"
-              items={toCheck}
+              groups={toCheck}
               verb="À voir avec"
               onOpen={open}
               className="mt-7 sm:mt-12"
             />
+          ) : null}
+
+          {goodToKnowCount > 0 ? (
+            <details
+              className="group mt-9 sm:mt-14"
+              open={goodToKnowOpen}
+              onToggle={(e) => setGoodToKnowOpen(e.currentTarget.open)}
+            >
+              <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+                <span className="flex items-center gap-2.5 text-lg font-medium sm:gap-3 sm:text-[22px]">
+                  <span aria-hidden className="dot" />
+                  Bon à savoir
+                  <span className="font-normal text-muted">({goodToKnowCount})</span>
+                  <span
+                    aria-hidden
+                    className="ml-1 inline-block text-muted transition group-open:rotate-90 print:hidden"
+                  >
+                    ›
+                  </span>
+                </span>
+                <span className="mt-1.5 block text-[15px] leading-[1.5] text-muted sm:text-[17px]">
+                  Des services gratuits ou des petites réductions, à garder sous la main.
+                </span>
+              </summary>
+              <CompactBlock groups={goodToKnow} onOpen={open} />
+            </details>
           ) : null}
 
           <LocalAidsSection commune={profile.commune} />
@@ -162,14 +207,7 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
                   ›
                 </span>
               </summary>
-              <AidList
-                title="Ne vous concernent pas a priori"
-                dot="dot-off"
-                items={other}
-                onOpen={open}
-                className="mt-6"
-                headingLevel="h2"
-              />
+              <OtherList items={other} onOpen={open} />
             </details>
           ) : null}
         </div>
@@ -207,59 +245,141 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
   );
 }
 
-function AidList({
+function ThemedBlock({
   title,
   dot,
-  items,
+  groups,
   verb,
   onOpen,
   className,
-  headingLevel = "h2",
 }: {
   title: string;
   dot: string;
-  items: readonly AidResult[];
+  groups: readonly ThemeGroup[];
   verb?: string;
   onOpen: (r: AidResult, fromRow: boolean) => void;
   className?: string;
-  headingLevel?: "h2" | "h3";
 }) {
-  const Heading = headingLevel;
   return (
     <section className={className}>
-      <Heading className="flex items-center gap-2.5 text-lg font-medium sm:gap-3 sm:text-[22px]">
+      <h2 className="flex items-center gap-2.5 text-lg font-medium sm:gap-3 sm:text-[22px]">
         <span aria-hidden className={`dot ${dot}`} />
         {title}
-      </Heading>
-      <ul className="mt-2 flex flex-col sm:mt-4">
-        {items.map((r, i) => (
-          <li
-            key={r.aid.id}
-            className={`border-t border-border ${i === items.length - 1 ? "border-b" : ""}`}
-          >
+        <span className="font-normal text-muted">({countItems(groups)})</span>
+      </h2>
+      {groups.map((g) => (
+        <div key={g.theme} className="mt-5 sm:mt-7">
+          <h3 className="text-[15px] font-medium uppercase tracking-[0.06em] text-muted sm:text-base">
+            {THEME_LABELS[g.theme]}
+          </h3>
+          <ul className="mt-1.5 flex flex-col sm:mt-2.5">
+            {g.items.map((r, i) => (
+              <li
+                key={r.aid.id}
+                className={`border-t border-border ${i === g.items.length - 1 ? "border-b" : ""}`}
+              >
+                <button
+                  type="button"
+                  data-aid-id={r.aid.id}
+                  onClick={() => onOpen(r, true)}
+                  aria-label={`${r.aid.name} : voir le détail`}
+                  className="-mx-3 grid w-[calc(100%+24px)] grid-cols-[1fr_auto] items-center gap-3 rounded-lg px-3 py-3.5 text-left transition hover:bg-hover sm:gap-6 sm:py-[22px]"
+                >
+                  <span>
+                    <span className="block font-serif text-[22px] leading-tight tracking-[-0.01em] text-foreground sm:text-[28px]">
+                      {r.aid.name}
+                    </span>
+                    <span className="mt-1 block text-[15px] leading-[1.5] text-muted sm:mt-1.5 sm:text-[17px]">
+                      <span className="hidden sm:inline">{r.aid.valueStatement} </span>
+                      {verb ? (
+                        <>
+                          {verb} : {r.aid.howToApply.organism}.
+                        </>
+                      ) : null}
+                    </span>
+                  </span>
+                  <span aria-hidden className="text-xl text-muted sm:text-[22px]">
+                    ›
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+/** Liste compacte : le nom seulement, le détail reste au clic. */
+function CompactBlock({
+  groups,
+  onOpen,
+}: {
+  groups: readonly ThemeGroup[];
+  onOpen: (r: AidResult, fromRow: boolean) => void;
+}) {
+  return (
+    <div className="mt-4 sm:mt-6">
+      {groups.map((g) => (
+        <div key={g.theme} className="mt-4 first:mt-0 sm:mt-5">
+          <h3 className="text-[15px] font-medium uppercase tracking-[0.06em] text-muted sm:text-base">
+            {THEME_LABELS[g.theme]}
+          </h3>
+          <ul className="mt-1 flex flex-col">
+            {g.items.map((r) => (
+              <li key={r.aid.id}>
+                <button
+                  type="button"
+                  data-aid-id={r.aid.id}
+                  onClick={() => onOpen(r, true)}
+                  aria-label={`${r.aid.name} : voir le détail`}
+                  className="-mx-3 flex w-[calc(100%+24px)] items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[19px] leading-snug text-foreground transition hover:bg-hover sm:text-[21px]"
+                >
+                  <span>
+                    {r.aid.name}
+                    {r.status === "to_check" ? (
+                      <span className="ml-2 text-[14px] text-muted sm:text-[15px]">à vérifier</span>
+                    ) : null}
+                  </span>
+                  <span aria-hidden className="text-lg text-muted">
+                    ›
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OtherList({
+  items,
+  onOpen,
+}: {
+  items: readonly AidResult[];
+  onOpen: (r: AidResult, fromRow: boolean) => void;
+}) {
+  return (
+    <section className="mt-6">
+      <h2 className="flex items-center gap-2.5 text-lg font-medium sm:gap-3 sm:text-[22px]">
+        <span aria-hidden className="dot dot-off" />
+        Ne vous concernent pas a priori
+      </h2>
+      <ul className="mt-2 flex flex-col">
+        {items.map((r) => (
+          <li key={r.aid.id}>
             <button
               type="button"
               data-aid-id={r.aid.id}
               onClick={() => onOpen(r, true)}
               aria-label={`${r.aid.name} : voir le détail`}
-              className="-mx-3 grid w-[calc(100%+24px)] grid-cols-[1fr_auto] items-center gap-3 rounded-lg px-3 py-4 text-left transition hover:bg-hover sm:gap-6 sm:py-[26px]"
+              className="-mx-3 flex w-[calc(100%+24px)] items-center justify-between gap-3 rounded-lg px-3 py-2.5 text-left text-[19px] leading-snug text-muted transition hover:bg-hover sm:text-[21px]"
             >
-              <span>
-                <span className="block font-serif text-[22px] leading-tight tracking-[-0.01em] text-foreground sm:text-[28px]">
-                  {r.aid.name}
-                </span>
-                <span className="mt-1 block text-[15px] leading-[1.5] text-muted sm:mt-1.5 sm:text-[17px]">
-                  <span className="hidden sm:inline">{r.aid.valueStatement} </span>
-                  {verb ? (
-                    <>
-                      {verb} : {r.aid.howToApply.organism}.
-                    </>
-                  ) : null}
-                </span>
-              </span>
-              <span aria-hidden className="text-xl text-muted sm:text-[22px]">
-                ›
-              </span>
+              <span>{r.aid.name}</span>
+              <span aria-hidden className="text-lg">›</span>
             </button>
           </li>
         ))}
