@@ -29,8 +29,8 @@ export default function AccessibilitePage() {
       <LegalH2>Signaler un problème</LegalH2>
       <LegalP>
         Si vous rencontrez une difficulté pour utiliser le site (texte trop petit, élément
-        inaccessible au clavier, contenu incompréhensible), écrivez-nous à [adresse
-        électronique de contact] en décrivant le problème et la page concernée. Nous nous
+        inaccessible au clavier, contenu incompréhensible), écrivez-nous à
+        contact@walidai.fr en décrivant le problème et la page concernée. Nous nous
         engageons à vous répondre.
       </LegalP>
     </LegalLayout>

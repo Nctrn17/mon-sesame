@@ -6,21 +6,17 @@ export const metadata: Metadata = {
   description: "Mentions légales du service Mon sésame.",
 };
 
-/*
-  Les champs entre crochets sont à compléter avant la mise en ligne publique :
-  identité de l'éditeur et coordonnées de contact.
-*/
 export default function MentionsLegalesPage() {
   return (
     <LegalLayout current="/mentions-legales" title="Mentions légales">
 
       <LegalH2>Éditeur du site</LegalH2>
       <LegalP>
-        Le site Mon sésame est édité par [Nom ou raison sociale de l&apos;éditeur],
-        [adresse], joignable à l&apos;adresse [adresse électronique de contact].
-      </LegalP>
-      <LegalP>
-        Directeur de la publication : [nom du directeur de la publication].
+        Le site Mon sésame est édité à titre non professionnel par une personne physique,
+        conformément à l&apos;article 6-III-2 de la loi n° 2004-575 du 21 juin 2004 pour la
+        confiance dans l&apos;économie numérique. Son identité a été communiquée à
+        l&apos;hébergeur, qui la conserve. Vous pouvez joindre l&apos;éditeur à
+        l&apos;adresse contact@walidai.fr.
       </LegalP>
 
       <LegalH2>Hébergement</LegalH2>
@@ -39,8 +35,7 @@ export default function MentionsLegalesPage() {
 
       <LegalH2>Nous contacter</LegalH2>
       <LegalP>
-        Pour toute question sur le site ou son contenu, écrivez à [adresse électronique de
-        contact].
+        Pour toute question sur le site ou son contenu, écrivez à contact@walidai.fr.
       </LegalP>
     </LegalLayout>
   );

@@ -50,7 +50,7 @@ export default function ConfidentialitePage() {
         Conformément au règlement général sur la protection des données (RGPD), vous disposez
         de droits d&apos;accès, de rectification et d&apos;effacement. Comme nous ne conservons
         aucune donnée, il n&apos;y a en pratique rien à effacer. Pour toute question, écrivez à
-        [adresse électronique de contact]. Vous pouvez aussi saisir la CNIL (cnil.fr).
+        contact@walidai.fr. Vous pouvez aussi saisir la CNIL (cnil.fr).
       </LegalP>
     </LegalLayout>
   );
