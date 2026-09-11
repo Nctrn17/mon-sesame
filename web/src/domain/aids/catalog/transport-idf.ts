@@ -142,6 +142,7 @@ export const transportIdfDefinitions: AidDefinition[] = [
       source: TRANSPORT_IDF.source,
       howToApply: {
         organism: "Votre conseil départemental ou le CCAS de votre commune",
+        guichet: "ccas",
         url: TRANSPORT_IDF.source.url,
         steps: [
           "Procurez-vous une carte Navigo personnalisée.",
@@ -198,6 +199,7 @@ export const transportIdfDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Agence Solidarité Transport (en ligne ou par téléphone)",
+        guichet: "france_services",
         url: "https://www.solidaritetransport.fr/",
         sentenceToSay: "Je bénéficie de la Complémentaire santé solidaire et je voudrais activer la réduction Solidarité Transport sur mon passe Navigo.",
       },

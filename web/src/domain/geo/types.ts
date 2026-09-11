@@ -20,4 +20,6 @@ export interface Commune {
   readonly codeRegion: RegionCode;
   readonly codeEpci?: EpciCode;
   readonly population?: number;
+  /** Centre géographique (WGS84), pour trouver le guichet le plus proche. */
+  readonly centre?: { readonly lat: number; readonly lon: number };
 }

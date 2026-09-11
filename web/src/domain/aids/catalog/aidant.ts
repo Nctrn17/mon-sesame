@@ -51,6 +51,7 @@ export const aidantDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "La CAF ou la MSA (AJPA) ; le département pour le répit (via l'APA du proche)",
+        guichet: "clic",
         url: "https://www.pour-les-personnes-agees.gouv.fr/solutions-pour-les-aidants/soutien-financier/l-allocation-journaliere-du-proche-aidant-qu-est-ce-que-c-est",
         sentenceToSay:
           "J'aide un proche : je voudrais l'allocation journalière du proche aidant et des solutions de répit.",

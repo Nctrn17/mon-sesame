@@ -168,6 +168,7 @@ export const logementDefinitions: AidDefinition[] = [
       source: { label: "caf.fr : les aides personnelles au logement", url: "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/logement/les-aides-personnelles-au-logement" },
       howToApply: {
         organism: "La CAF (ou la MSA pour le régime agricole), sur caf.fr",
+        guichet: "caf",
         url: "https://www.caf.fr/allocataires/aides-et-demarches/droits-et-prestations/logement/les-aides-personnelles-au-logement",
         sentenceToSay: "Je voudrais faire une demande d'aide au logement.",
       },
@@ -190,6 +191,7 @@ export const logementDefinitions: AidDefinition[] = [
       source: { label: "france-renov.gouv.fr : MaPrimeAdapt'", url: "https://france-renov.gouv.fr/aides/maprimeadapt" },
       howToApply: {
         organism: "France Rénov' / Anah (un accompagnateur AMO vous suit)",
+        guichet: "anah",
         url: "https://france-renov.gouv.fr/aides/maprimeadapt",
         sentenceToSay: "Je voudrais bénéficier de MaPrimeAdapt' pour adapter mon logement.",
       },
@@ -217,6 +219,7 @@ export const logementDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
+        guichet: "clic",
         url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-aide-sociale-a-l-hebergement-ash-en-etablissement",
         sentenceToSay: "Je souhaite demander l'aide sociale à l'hébergement.",
       },
@@ -239,6 +242,7 @@ export const logementDefinitions: AidDefinition[] = [
       source: { label: "france-renov.gouv.fr : MaPrimeRénov'", url: "https://france-renov.gouv.fr/aides/maprimerenov" },
       howToApply: {
         organism: "France Rénov' (conseil gratuit) puis Anah",
+        guichet: "anah",
         url: "https://france-renov.gouv.fr/aides/maprimerenov",
         sentenceToSay: "Je voudrais des conseils et une aide pour des travaux d'économie d'énergie.",
       },
@@ -261,6 +265,7 @@ export const logementDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : FSL", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334" },
       howToApply: {
         organism: "Le CCAS ou le service social du département",
+        guichet: "ccas",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1334",
         sentenceToSay: "J'ai du mal à payer mon logement, puis-je avoir une aide du FSL ?",
       },

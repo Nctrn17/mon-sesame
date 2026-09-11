@@ -90,6 +90,7 @@ export const santeDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : CSS", url: CSS.source.url },
       howToApply: {
         organism: "Votre caisse d'Assurance Maladie (compte ameli) ou la MSA",
+        guichet: "cpam",
         url: CSS.source.url,
         sentenceToSay: "Je voudrais faire une demande de Complémentaire santé solidaire.",
       },
@@ -112,6 +113,7 @@ export const santeDefinitions: AidDefinition[] = [
       source: { label: "ameli.fr : ALD", url: "https://www.ameli.fr/assure/droits-demarches/maladie-accident-hospitalisation/affection-longue-duree-ald" },
       howToApply: {
         organism: "Votre médecin traitant (qui établit le protocole de soins)",
+        guichet: "cpam",
         url: "https://www.ameli.fr/assure/droits-demarches/maladie-accident-hospitalisation/affection-longue-duree-ald",
         sentenceToSay: "Pensez-vous que je relève d'une ALD ? Pouvez-vous faire la demande ?",
       },
@@ -155,6 +157,7 @@ export const santeDefinitions: AidDefinition[] = [
       source: { label: "ameli.fr : frais de transport", url: "https://www.ameli.fr/assure/remboursements/rembourse/frais-transport" },
       howToApply: {
         organism: "Votre médecin (prescription de transport) puis l'Assurance Maladie",
+        guichet: "cpam",
         sentenceToSay: "Pouvez-vous me prescrire un transport pour mes soins ?",
       },
       lastVerifiedAt: "2026-06-04",
@@ -176,6 +179,7 @@ export const santeDefinitions: AidDefinition[] = [
       source: { label: "ameli.fr : cure thermale", url: "https://www.ameli.fr/assure/remboursements/rembourse/cure-thermale" },
       howToApply: {
         organism: "Votre médecin (prescription) puis l'Assurance Maladie",
+        guichet: "cpam",
         sentenceToSay: "Une cure thermale serait-elle indiquée pour moi ?",
       },
       lastVerifiedAt: "2026-06-04",

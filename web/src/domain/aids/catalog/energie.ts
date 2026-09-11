@@ -72,6 +72,7 @@ export const energieDefinitions: AidDefinition[] = [
       source: CHEQUE_ENERGIE.source,
       howToApply: {
         organism: "Portail chequeenergie.gouv.fr (et déclaration de revenus à jour)",
+        guichet: "france_services",
         url: CHEQUE_ENERGIE.source.url,
         sentenceToSay:
           "Je vérifie mon éligibilité au chèque énergie et, si besoin, je le réclame sur le portail officiel.",

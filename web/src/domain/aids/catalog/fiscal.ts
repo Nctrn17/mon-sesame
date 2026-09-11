@@ -202,6 +202,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : exonération de taxe foncière", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F59" },
       howToApply: {
         organism: "Votre centre des impôts (espace particulier sur impots.gouv.fr)",
+        guichet: "sip",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F59",
         sentenceToSay:
           "Je pense remplir les conditions d'exonération de taxe foncière liée à l'âge et aux ressources : pouvez-vous vérifier ?",
@@ -228,6 +229,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "impots.gouv.fr : crédit d'impôt emploi à domicile", url: "https://www.impots.gouv.fr/particulier/questions/comment-beneficier-du-credit-dimpot-pour-lemploi-dun-salarie-domicile" },
       howToApply: {
         organism: "Les impôts (via la déclaration de revenus ; avance immédiate possible avec le CESU+)",
+        guichet: "sip",
         url: "https://www.impots.gouv.fr/particulier/emploi-domicile",
         sentenceToSay: "Je voudrais bénéficier du crédit d'impôt pour l'emploi d'une aide à domicile.",
       },
@@ -250,6 +252,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "impots.gouv.fr : réduction d'impôt en EHPAD", url: "https://www.impots.gouv.fr/particulier/questions/je-suis-entree-en-etablissement-pour-personne-dependante-comment-puis-je" },
       howToApply: {
         organism: "Les impôts, via la déclaration de revenus",
+        guichet: "sip",
         url: "https://www.impots.gouv.fr/particulier/questions/je-suis-entree-en-etablissement-pour-personne-dependante-comment-puis-je",
         sentenceToSay: "Je souhaite déclarer les frais d'hébergement en EHPAD pour la réduction d'impôt.",
       },
@@ -274,6 +277,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "impots.gouv.fr : je vis seul(e) sans enfant à charge", url: "https://www.impots.gouv.fr/particulier/questions/je-vis-seule-et-nai-plus-denfants-charge-quelles-consequences" },
       howToApply: {
         organism: "Les impôts, en cochant la bonne case sur votre déclaration",
+        guichet: "sip",
         url: "https://www.impots.gouv.fr/particulier/questions/je-suis-ancien-combattant-ou-veuve-dancien-combattant-cela-modifie-t-il-mon",
         sentenceToSay:
           "Je pense avoir droit à une demi-part supplémentaire : pouvez-vous vérifier ma déclaration ?",
@@ -297,6 +301,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "impots.gouv.fr : départ en maison de retraite et exonérations", url: "https://www.impots.gouv.fr/particulier/questions/je-suis-exonere-de-taxe-dhabitation-et-de-taxe-fonciere-je-vais-prochainement" },
       howToApply: {
         organism: "Les impôts, via « Gérer mes biens immobiliers » sur impots.gouv.fr",
+        guichet: "sip",
         url: "https://www.impots.gouv.fr/particulier/questions/je-suis-exonere-de-taxe-dhabitation-et-de-taxe-fonciere-je-vais-prochainement",
         sentenceToSay: "Je suis en établissement et je conserve mon logement : pouvez-vous vérifier ma taxe foncière et d'habitation ?",
       },
@@ -319,6 +324,7 @@ export const fiscalDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : CSG et CRDS sur les revenus de remplacement", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2971" },
       howToApply: {
         organism: "Votre centre des impôts et votre caisse de retraite",
+        guichet: "sip",
         url: "https://www.impots.gouv.fr/particulier",
         sentenceToSay: "Mes revenus ont baissé : mon taux de CSG et mes abattements sont-ils bien à jour ?",
       },

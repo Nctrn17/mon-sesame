@@ -8,7 +8,7 @@ import type { Commune } from "./types";
  */
 
 const API_URL = "https://geo.api.gouv.fr/communes";
-const FIELDS = "nom,code,codesPostaux,codeDepartement,codeRegion,codeEpci,population";
+const FIELDS = "nom,code,codesPostaux,codeDepartement,codeRegion,codeEpci,population,centre";
 
 interface ApiCommune {
   code: string;
@@ -18,6 +18,7 @@ interface ApiCommune {
   codeRegion?: string;
   codeEpci?: string;
   population?: number;
+  centre?: { type?: string; coordinates?: [number, number] };
 }
 
 function toCommune(c: ApiCommune): Commune {
@@ -29,6 +30,10 @@ function toCommune(c: ApiCommune): Commune {
     codeRegion: c.codeRegion ?? "",
     codeEpci: c.codeEpci,
     population: c.population,
+    centre:
+      c.centre?.coordinates && c.centre.coordinates.length === 2
+        ? { lon: c.centre.coordinates[0], lat: c.centre.coordinates[1] }
+        : undefined,
   };
 }
 

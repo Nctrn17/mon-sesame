@@ -124,6 +124,7 @@ export const handicapDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : CMI", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F34049" },
       howToApply: {
         organism: "La MDPH ou le conseil départemental (avec la demande d'APA le cas échéant)",
+        guichet: "clic",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F34049",
         sentenceToSay: "Je souhaite demander une carte mobilité inclusion.",
       },
@@ -146,6 +147,7 @@ export const handicapDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : AAH", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F12242" },
       howToApply: {
         organism: "La CAF ou la MSA",
+        guichet: "caf",
         sentenceToSay: "Mon AAH peut-elle être maintenue avec ma retraite ?",
       },
       lastVerifiedAt: "2026-06-04",
@@ -167,6 +169,7 @@ export const handicapDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : PCH", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F14202" },
       howToApply: {
         organism: "La MDPH de votre département",
+        guichet: "clic",
         sentenceToSay: "Je voudrais étudier la PCH et le droit d'option avec l'APA.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -188,6 +191,7 @@ export const handicapDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : MTP", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F31434" },
       howToApply: {
         organism: "Votre CPAM, puis votre caisse de retraite après 60 ans",
+        guichet: "cpam",
         sentenceToSay: "Ai-je droit à la majoration pour tierce personne ?",
       },
       lastVerifiedAt: "2026-06-04",
@@ -209,6 +213,7 @@ export const handicapDefinitions: AidDefinition[] = [
       source: { label: "monparcourshandicap.gouv.fr : mobilité", url: "https://www.monparcourshandicap.gouv.fr/" },
       howToApply: {
         organism: "Votre mairie ou intercommunalité (service de transport adapté)",
+        guichet: "mairie",
         sentenceToSay: "Avez-vous un service de transport adapté pour les personnes à mobilité réduite ?",
       },
       lastVerifiedAt: "2026-06-04",

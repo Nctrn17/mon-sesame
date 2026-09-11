@@ -102,6 +102,7 @@ export const veuvageDefinitions: AidDefinition[] = [
       source: { label: "info-retraite.fr : réversion", url: REVERSION.source.url },
       howToApply: {
         organism: "Une demande unique possible sur info-retraite.fr (tous régimes)",
+        guichet: "cicas",
         url: REVERSION.source.url,
         sentenceToSay: "Je souhaite demander la pension de réversion de mon conjoint décédé.",
       },

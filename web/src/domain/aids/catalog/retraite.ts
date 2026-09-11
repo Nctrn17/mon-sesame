@@ -149,6 +149,7 @@ export const retraiteDefinitions: AidDefinition[] = [
       source: { label: "info-retraite.fr", url: "https://www.info-retraite.fr/" },
       howToApply: {
         organism: "info-retraite.fr (compte unique tous régimes)",
+        guichet: "france_services",
         url: "https://www.info-retraite.fr/",
         sentenceToSay: "Je veux vérifier que tous mes régimes de retraite sont bien pris en compte.",
       },

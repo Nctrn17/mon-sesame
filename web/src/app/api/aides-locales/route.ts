@@ -22,8 +22,11 @@ const MAX_SERVICES = 8;
 /**
  * Sous-thèmes data.inclusion pertinents pour un public senior (et ses aidants).
  * On filtre la recherche pour écarter le bruit (emploi, création d'entreprise,
- * permis de conduire, garde d'enfants...) et ne garder que santé, autonomie,
- * logement, mobilité, accès aux droits, budget, équipement, numérique.
+ * permis de conduire, garde d'enfants, numérique, microcrédit pro...) et ne
+ * garder que santé, autonomie, logement, mobilité douce, accès aux droits,
+ * surendettement, aide ménagère, alimentation, aidants. Le budget et le
+ * numérique sont couverts par les guichets de l'Annuaire (Point Conseil
+ * Budget, France Services), plus fiables.
  *
  * IMPORTANT : on liste des SOUS-thèmes (« racine--sous-theme »), jamais des
  * racines seules. L'API data.inclusion renvoie une erreur 500 dès qu'on combine
@@ -36,10 +39,7 @@ const THEMATIQUES_SENIORS = [
   "sante--sante-mentale",
   "sante--constituer-un-dossier-mdph-invalidite",
   // Mobilité
-  "mobilite--acceder-a-un-vehicule",
-  "mobilite--entretenir-reparer-son-vehicule",
   "mobilite--etre-accompagne-dans-son-parcours-mobilite",
-  "mobilite--financer-ma-mobilite",
   "mobilite--mobilite-douce-partagee-collective",
   // Logement
   "logement-hebergement--changer-de-logement",
@@ -48,29 +48,18 @@ const THEMATIQUES_SENIORS = [
   "logement-hebergement--reduire-les-impayes-de-loyer",
   "logement-hebergement--se-maintenir-dans-le-logement",
   "logement-hebergement--sinformer-sur-les-demarches-liees-a-lacces-au-logement",
-  // Numérique
-  "numerique--acceder-a-des-services-en-ligne",
-  "numerique--acceder-a-une-connexion-internet",
-  "numerique--acquerir-un-equipement",
-  "numerique--maitriser-les-fondamentaux-du-numerique",
   // Accès aux droits, démarches, justice
   "difficultes-administratives-ou-juridiques--accompagnement-aux-demarches-administratives",
-  "difficultes-administratives-ou-juridiques--accompagnement-pour-lacces-a-la-citoyennete",
   "difficultes-administratives-ou-juridiques--accompagnement-pour-lacces-aux-droits",
   "difficultes-administratives-ou-juridiques--beneficier-dune-mesure-daccompagnement-adapte",
-  "difficultes-administratives-ou-juridiques--connaitre-ses-droits-face-a-une-discrimination",
   "difficultes-administratives-ou-juridiques--prendre-en-compte-une-problematique-judiciaire",
   // Budget et difficultés financières
-  "difficultes-financieres--acquerir-une-autonomie-budgetaire",
-  "difficultes-financieres--ameliorer-sa-gestion-budgetaire",
   "difficultes-financieres--mettre-en-place-une-mesure-de-protection-financiere",
-  "difficultes-financieres--prevenir-une-degradation-de-la-situation-financiere",
   "difficultes-financieres--situation-dendettement-surendettement",
   // Équipement, aide ménagère, alimentation
   "equipement-et-alimentation--aide-menagere",
   "equipement-et-alimentation--alimentation",
   "equipement-et-alimentation--electromenager",
-  "equipement-et-alimentation--habillement",
   // Aidants et dépendance
   "famille--prise-en-charge-personne-dependante",
   "famille--soutien-aidants",

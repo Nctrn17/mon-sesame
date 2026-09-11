@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CATEGORY_LABELS } from "@/domain/aids/themes";
+import { findNearestGuichet, type LocalGuichet } from "@/domain/geo/guichet";
+import type { Commune } from "@/domain/geo/types";
 import type { AidResult } from "@/domain/eligibility/types";
 import { SimHeader } from "@/components/wizard/SimHeader";
 
@@ -20,8 +22,18 @@ function statusLabel(status: AidResult["status"]): { label: string; dot: string 
 }
 
 /** Écran « détail d'une aide » : le mot qui ouvre, à qui s'adresser, comment faire. */
-export function AidDetail({ result, onBack }: { result: AidResult; onBack: () => void }) {
+export function AidDetail({
+  result,
+  commune,
+  onBack,
+}: {
+  result: AidResult;
+  commune?: Commune;
+  onBack: () => void;
+}) {
   const { aid } = result;
+  const [nearest, setNearest] = useState<LocalGuichet | null>(null);
+  const guichetType = aid.howToApply.guichet;
   const status = statusLabel(result.status);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const active = result.status === "eligible" || result.status === "to_check";
@@ -29,6 +41,17 @@ export function AidDetail({ result, onBack }: { result: AidResult; onBack: () =>
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
+
+  // Le lieu le plus proche pour ce type de guichet (CLIC, CPAM, Point Conseil
+  // Budget...). Sans commune ou sans type, la carte garde son libellé générique.
+  useEffect(() => {
+    if (!commune || !guichetType || !active) return;
+    const controller = new AbortController();
+    findNearestGuichet(guichetType, commune, controller.signal).then((g) => {
+      if (!controller.signal.aborted) setNearest(g);
+    });
+    return () => controller.abort();
+  }, [commune, guichetType, active]);
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -150,6 +173,42 @@ export function AidDetail({ result, onBack }: { result: AidResult; onBack: () =>
             <p className="text-[15px] text-muted">À qui s&apos;adresser</p>
             <p className="mt-2 text-[19px] font-medium leading-snug">{aid.howToApply.organism}</p>
             <p className="mt-1.5 text-base leading-[1.55] text-muted">Piloté par : {aid.authority}.</p>
+            {nearest ? (
+              <div className="mt-4 border-t border-border pt-4">
+                <p className="text-[15px] text-muted">
+                  {nearest.distanceKm !== null && nearest.distanceKm !== undefined && nearest.distanceKm > 0
+                    ? `Le plus proche de chez vous (à ${formatKm(nearest.distanceKm)})`
+                    : "Près de chez vous"}
+                </p>
+                <p className="mt-1 text-[17px] font-medium leading-snug">{nearest.nom}</p>
+                {nearest.adresse ? (
+                  <p className="mt-1 text-base leading-[1.55] text-body">{nearest.adresse}</p>
+                ) : null}
+                {nearest.telephone ? (
+                  <p className="mt-1 text-base">
+                    <a
+                      href={`tel:${nearest.telephone.replace(/\s/g, "")}`}
+                      className="link-sienna text-foreground"
+                    >
+                      {nearest.telephone}
+                    </a>
+                  </p>
+                ) : null}
+                {nearest.siteInternet ? (
+                  <p className="mt-1 text-base">
+                    <a
+                      href={nearest.siteInternet}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Site internet de ${nearest.nom ?? "ce guichet"} (nouvelle fenêtre)`}
+                      className="link-sienna text-foreground"
+                    >
+                      Site internet
+                    </a>
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
             {active && aid.howToApply.url ? (
               <a
                 href={aid.howToApply.url}
@@ -166,4 +225,9 @@ export function AidDetail({ result, onBack }: { result: AidResult; onBack: () =>
       </main>
     </div>
   );
+}
+
+function formatKm(km: number): string {
+  if (km < 1) return "moins d'1 km";
+  return `${km < 10 ? km.toFixed(1).replace(".", ",").replace(",0", "") : Math.round(km)} km`;
 }

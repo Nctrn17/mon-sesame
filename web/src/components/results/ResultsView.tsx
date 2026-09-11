@@ -77,7 +77,9 @@ export function ResultsView({ profile, onRestart, onEdit }: Props) {
   };
 
   if (selected) {
-    return <AidDetail result={selected} onBack={() => setSelected(null)} />;
+    return (
+      <AidDetail result={selected} commune={profile.commune} onBack={() => setSelected(null)} />
+    );
   }
 
   if (mainCount === 0 && goodToKnowCount === 0) {

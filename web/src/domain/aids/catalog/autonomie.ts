@@ -269,6 +269,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       source: { label: "pour-les-personnes-agees.gouv.fr : APA à domicile", url: APA.source.url },
       howToApply: {
         organism: "Le conseil départemental de votre lieu de résidence",
+        guichet: "clic",
         url: APA.source.url,
         sentenceToSay: "Je souhaite déposer une demande d'APA à domicile et obtenir une évaluation de mon autonomie.",
       },
@@ -294,6 +295,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Le conseil départemental, souvent via l'établissement",
+        guichet: "clic",
         url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-dans-un-ehpad/aides-financieres-en-ehpad/l-apa-en-etablissement",
         sentenceToSay: "Je souhaite faire valoir l'APA pour réduire le tarif dépendance de l'établissement.",
       },
@@ -317,6 +319,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : aides aux personnes âgées", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N392" },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
+        guichet: "clic",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N392",
         sentenceToSay: "Je voudrais demander l'aide-ménagère au titre de l'aide sociale départementale.",
       },
@@ -368,6 +371,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Le CCAS de votre commune ou le conseil départemental",
+        guichet: "clic",
         url: "https://www.pour-les-personnes-agees.gouv.fr/vivre-a-domicile/aides-financieres/les-aides-financieres-pour-installer-une-teleassistance",
         sentenceToSay: "Je voudrais installer une téléassistance et connaître les aides pour la financer.",
       },
@@ -395,6 +399,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Le CCAS de votre commune, ou le service autonomie du conseil départemental",
+        guichet: "clic",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F248",
         sentenceToSay:
           "Je voudrais bénéficier du portage de repas à domicile et connaître la prise en charge possible au titre de l'aide sociale.",
@@ -421,6 +426,7 @@ export const autonomieDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "L'assistante sociale de l'hôpital ou votre caisse de retraite",
+        guichet: "clic",
         sentenceToSay: "Je voudrais une aide au retour à domicile après mon hospitalisation.",
       },
       lastVerifiedAt: "2026-06-04",

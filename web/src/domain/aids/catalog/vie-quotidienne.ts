@@ -247,6 +247,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "À la billetterie ou au guichet (musée, cinéma, piscine...)",
+        guichet: "ccas",
         sentenceToSay: "Avez-vous un tarif senior ? Voici ma pièce d'identité.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -268,6 +269,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "france-services.gouv.fr", url: "https://www.france-services.gouv.fr/" },
       howToApply: {
         organism: "Un espace France Services près de chez vous (souvent en mairie)",
+        guichet: "france_services",
         url: "https://www.france-services.gouv.fr/",
         sentenceToSay: "J'aimerais de l'aide pour faire mes démarches.",
       },
@@ -290,6 +292,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "banque-france.fr : plafonnement des frais bancaires et offre clientèle fragile", url: "https://www.banque-france.fr/fr/a-votre-service/particuliers/connaitre-pratiques-bancaires-assurance/compte-frais/le-plafonnement-des-frais-bancaires-et-loffre-clientele-fragile" },
       howToApply: {
         organism: "Votre banque",
+        guichet: "pcb",
         sentenceToSay:
           "Je voudrais l'offre spécifique clientèle fragile et le plafonnement de mes frais bancaires.",
       },
@@ -312,6 +315,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : aide juridictionnelle", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F18074" },
       howToApply: {
         organism: "Le tribunal compétent ou un point-justice (France Services, maison de justice)",
+        guichet: "mjd",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F18074",
         sentenceToSay: "Je voudrais demander l'aide juridictionnelle pour ma démarche.",
       },
@@ -337,6 +341,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       },
       howToApply: {
         organism: "Votre opérateur (offre sociale), avec une attestation de votre caisse de retraite ou de la CAF",
+        guichet: "france_services",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1337",
         sentenceToSay: "Je voudrais bénéficier de l'offre internet et téléphone à tarif social.",
       },
@@ -359,6 +364,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "agirc-arrco.fr : Sortir Plus", url: "https://www.agirc-arrco.fr/mes-services-particuliers/retraites/etre-accompagne-dans-mes-sorties/" },
       howToApply: {
         organism: "Agirc-Arrco (action sociale de votre retraite complémentaire)",
+        guichet: "cicas",
         url: "https://services75ans.agirc-arrco.fr/",
         sentenceToSay: "Je voudrais bénéficier du dispositif Sortir Plus pour des sorties accompagnées.",
       },
@@ -381,6 +387,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "economie.gouv.fr : Point Conseil Budget", url: "https://www.economie.gouv.fr/cedef/point-conseil-budget-PCB" },
       howToApply: {
         organism: "Un Point Conseil Budget près de chez vous (gratuit)",
+        guichet: "pcb",
         sentenceToSay: "Je voudrais de l'aide pour faire le point sur mon budget.",
       },
       lastVerifiedAt: "2026-06-04",
@@ -402,6 +409,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "banque-france.fr : dossier de surendettement", url: "https://www.banque-france.fr/fr/a-votre-service/particuliers/dossier-surendettement" },
       howToApply: {
         organism: "La commission de surendettement de la Banque de France",
+        guichet: "pcb",
         url: "https://www.banque-france.fr/fr/a-votre-service/particuliers/dossier-surendettement",
         sentenceToSay: "Je voudrais déposer un dossier de surendettement.",
       },
@@ -424,6 +432,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : droit au compte", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2417" },
       howToApply: {
         organism: "La Banque de France (avec l'attestation de refus de la banque)",
+        guichet: "pcb",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F2417",
         sentenceToSay: "Je veux exercer mon droit au compte.",
       },
@@ -446,6 +455,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "banque-france.fr : le microcrédit", url: "https://www.banque-france.fr/fr/a-votre-service/particuliers/connaitre-pratiques-bancaires-assurance/credit/microcredit" },
       howToApply: {
         organism: "Le CCAS, une association ou un Point Conseil Budget",
+        guichet: "ccas",
         sentenceToSay: "Je voudrais étudier un microcrédit personnel accompagné.",
       },
       lastVerifiedAt: "2026-09-10",
@@ -467,6 +477,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : conciliateur", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1736" },
       howToApply: {
         organism: "Le tribunal, la mairie ou un point-justice (France Services)",
+        guichet: "mjd",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/F1736",
         sentenceToSay: "Je voudrais saisir un conciliateur de justice pour mon litige.",
       },
@@ -511,6 +522,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "ancv.com : Seniors en Vacances", url: "https://www.ancv.com/seniors-en-vacances-sev" },
       howToApply: {
         organism: "Un porteur de projet (CCAS, association, club de seniors) ou l'ANCV",
+        guichet: "ccas",
         url: "https://www.ancv.com/seniors-en-vacances-sev",
         sentenceToSay: "Je voudrais partir avec le programme Seniors en Vacances.",
       },
@@ -533,6 +545,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "monalisa-asso.fr", url: "https://www.monalisa-asso.fr/" },
       howToApply: {
         organism: "MONALISA, les Petits Frères des Pauvres, ou la ligne Solitud'écoute",
+        guichet: "ccas",
         url: "https://www.monalisa-asso.fr/",
         sentenceToSay: "Je me sens seul(e), je voudrais des visites ou des appels.",
       },
@@ -555,6 +568,7 @@ export const vieQuotidienneDefinitions: AidDefinition[] = [
       source: { label: "service-public.gouv.fr : protection juridique", url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N155" },
       howToApply: {
         organism: "Vous-même (formulaire) ou un notaire",
+        guichet: "mjd",
         url: "https://www.service-public.gouv.fr/particuliers/vosdroits/N155",
         sentenceToSay: "Je voudrais établir un mandat de protection future.",
       },

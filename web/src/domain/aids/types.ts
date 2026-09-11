@@ -42,9 +42,29 @@ export interface AidSource {
   readonly url: string;
 }
 
+/**
+ * Type de guichet local, au sens de l'Annuaire de l'administration (pivot).
+ * Sert à afficher le lieu le plus proche sur la fiche d'une aide.
+ */
+export type GuichetType =
+  | "ccas"
+  | "cg"
+  | "clic"
+  | "cpam"
+  | "caf"
+  | "sip"
+  | "pcb"
+  | "france_services"
+  | "cicas"
+  | "anah"
+  | "mjd"
+  | "mairie";
+
 export interface AidHowToApply {
   /** Organisme qui instruit la demande (le "bon guichet"). */
   readonly organism: string;
+  /** Guichet local à localiser pour la personne (le plus proche de sa commune). */
+  readonly guichet?: GuichetType;
   readonly url?: string;
   readonly steps?: readonly string[];
   /** Phrase concrète à dire au guichet ou à écrire. */
