@@ -16,8 +16,7 @@ En ligne : https://monsesame.fr
 1. Un questionnaire court (une question par écran, langage clair, accessible).
 2. Un moteur d'éligibilité qui croise le profil avec un catalogue d'aides.
 3. Une page de résultats : aides éligibles / à vérifier / non retenues, avec
-   pour chacune le bon
-   guichet, et la démarche concrète.
+   pour chacune le bon guichet et la démarche concrète.
 
 ## Architecture (hybride)
 
