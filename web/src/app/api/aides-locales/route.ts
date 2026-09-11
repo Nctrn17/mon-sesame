@@ -14,7 +14,7 @@ import { plainText } from "@/domain/geo/plainText";
  * reste volontairement défensif : les champs sont optionnels selon les sources.
  */
 
-const BASE = "https://api.data.inclusion.beta.gouv.fr/api/v1";
+const BASE = "https://api.data.inclusion.gouv.fr/api/v1";
 const TIMEOUT_MS = 5000;
 const INSEE = /^[0-9AB]{5}$/i;
 const MAX_SERVICES = 8;
